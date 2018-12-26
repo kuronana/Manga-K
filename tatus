@@ -1,0 +1,14 @@
+receive.fsckobjects=true
+user.name=Jess Vachet
+user.email=jess94i@hotmail.fr
+merge.tool=sublimediff
+merge.tool=sublime
+core.editor=Vim
+core.editor=sublime
+core.autocrlf=input
+core.excludesfile=/home/wilder/.gitignore_global
+color.ui=true
+core.repositoryformatversion=0
+core.filemode=true
+core.bare=false
+core.logallrefupdates=true

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.1.3/slate/bootstrap.min.css">
+        <link rel="stylesheet" href="../assets/css/css.css">
+        {% block stylesheets %}{% endblock %}
+
+    </head>
+    <body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <a class="navbar-brand text-warning" href="{{ path('security_home') }}">Manga-K</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse familiNav" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                {% if not app.user %}
+                    <li class="nav-item">
+                        <a class="nav-link" data-target="#connexion" data-toggle="modal"><span>Connexion</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-target="#registration" data-toggle="modal">S'inscrire</a>
+                    </li>
+                {% elseif app.user %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('security_logout') }}"><span>Déconnexion</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('user_account') }}"><span>Mon compte</span></a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+
+    {% for message in app.flashes('registration_valid') %}
+        <div class="container">
+            <div class="row justify-content-center">
+                <div align="center" class="col-12 alert alert-dismissible fade out alert-success fade show">
+                    <button class="close" type="button" data-dismiss="alert">&times;</button>
+                    <strong>{{ message }}</strong>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    {% for message in app.flashes('registration_invalid') %}
+        <div class="container">
+            <div class="row justify-content-center">
+                <div align="center" class="col-12 alert alert-dismissible fade out alert-warning fade show">
+                    <button class="close" type="button" data-dismiss="alert">&times;</button>
+                    <strong>{{ message }}</strong>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
+    <!--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Modal Connexion !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
+
+    <div class="modal fade" id="connexion" tabindex="-1" role="dialog" aria-labelledby="connexion" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content familiNav">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="connexion">Inscription</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <form action="{{ path('security_login') }}" method="post">
+                        <div class="form-group">
+                            <input type="text" id="pseudo" placeholder="Pseudo" required name="_username" value="{{ last_username }}"
+                                   class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <input type="password" id="mdp" placeholder="Mot de passe" required name="_password" class="form-control">
+                        </div>
+                        <div class="container">
+                            <div class="modal-footer row justify-content-between">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                                <button type="submit" class="btn btn-primary">Link start !</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Modal registration !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
+
+    <div class="modal fade" id="registration" tabindex="-1" role="dialog" aria-labelledby="registration" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content familiNav">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="registration">Inscription</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    {{ form_start(form) }}
+
+                    <div class="row">
+                        <div class="col-12">
+                            {{ form_row(form.mail, {'label' : 'Adresse mail'}) }}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            {{ form_row(form.username, {'label' : 'Pseudo'}) }}
+                        </div>
+                        <div class="col-6">
+                            {{ form_row(form.password, {'label' : 'Mot de passe'}) }}
+                        </div>
+                        <div class="col-6">
+                            {{ form_row(form.confirm_password, {'label' : 'Confirmez votre mot de passe'}) }}
+                        </div>
+                    </div>
+
+                </div>
+                <div class="container">
+                    <div class="modal-footer row justify-content-between">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                        <button type="submit" class="btn btn-primary">Valider</button>
+                    </div>
+                </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+        {% block body %}{% endblock %}
+        {% block javascripts %}{% endblock %}
+        <script src="../assets/js/js.js"></script>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    </body>
+</html>
