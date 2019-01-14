@@ -34,13 +34,14 @@ class Animes
     private $duration;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\TypeLink", mappedBy="anime", orphanRemoval=true)
+     * @ORM\ManyToMany(targetEntity="App\Entity\Type", inversedBy="animes")
      */
-    private $typeLinks;
+    private $type;
 
     public function __construct()
     {
         $this->typeLinks = new ArrayCollection();
+        $this->type = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -85,31 +86,26 @@ class Animes
     }
 
     /**
-     * @return Collection|TypeLink[]
+     * @return Collection|Type[]
      */
-    public function getTypeLinks(): Collection
+    public function getType(): Collection
     {
-        return $this->typeLinks;
+        return $this->type;
     }
 
-    public function addTypeLink(TypeLink $typeLink): self
+    public function addType(Type $type): self
     {
-        if (!$this->typeLinks->contains($typeLink)) {
-            $this->typeLinks[] = $typeLink;
-            $typeLink->setAnime($this);
+        if (!$this->type->contains($type)) {
+            $this->type[] = $type;
         }
 
         return $this;
     }
 
-    public function removeTypeLink(TypeLink $typeLink): self
+    public function removeType(Type $type): self
     {
-        if ($this->typeLinks->contains($typeLink)) {
-            $this->typeLinks->removeElement($typeLink);
-            // set the owning side to null (unless already changed)
-            if ($typeLink->getAnime() === $this) {
-                $typeLink->setAnime(null);
-            }
+        if ($this->type->contains($type)) {
+            $this->type->removeElement($type);
         }
 
         return $this;

@@ -1,3 +1,15 @@
+body {
+    font-family: sans-serif;
+}
+
+.newAnimHead {
+    border-radius: 5px 5px 0 0
+}
+
+.newAnime {
+    border-radius: 0 0 5px 5px;
+}
+
 .orange {
     color: orange;
     transition: color 1s ease;

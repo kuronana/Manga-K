@@ -1,0 +1,24 @@
+{% extends '/security/base_connect.html.twig' %}
+
+{% block title %}Manka-K Compte{% endblock %}
+
+{% block body %}
+    <table class="table table-hover table-dark text-center">
+        <thead>
+        <tr>
+            <th scope="col">Nom</th>
+            <th scope="col">Synopsis</th>
+            <th scope="col">Durée</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for anime in animes %}
+            <tr>
+                <th scope="row">{{ anime.name }}</th>
+                <td class="text-justify">{{ anime.synopsis }}</td>
+                <td>{{ anime.duration }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

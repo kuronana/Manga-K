@@ -1,0 +1,34 @@
+{% extends '/security/base_connect.html.twig' %}
+
+{% block title %}Manka-K Compte{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-10" align="center">
+                <div class="card text-white bg-secondary mb-3 newAnime">
+                    <div class="card-header text-secondary bg-primary newAnimHead">Ajout d'un animé</div>
+                    <div class="card-body text-primary">
+                        <h4 class="card-title"></h4>
+                        {{ form_start(formAnime) }}
+                        {{ form_row(formAnime.name, { 'attr': {'style': 'border-radius: 5px'}}) }}
+                        {{ form_row(formAnime.synopsis, { 'attr': {'style': 'border-radius: 5px'}}) }}
+                        {{ form_row(formAnime.duration, { 'attr': {'class': 'col-2', 'style': 'border-radius: 5px'}}) }}
+                        <div class="form-group">
+                            <div class="col-12" align="center">
+                                {{ form_row(formAnime.type, { 'attr': {'class': 'col-12', 'style': 'display: inline-flex;flex-direction: row; justify-content: space-between'}}) }}
+                            </div>
+                        </div>
+
+                        <div class="custom-checkbox container">
+                        </div>
+                        <button type="submit" class="btn btn-dark">Créer</button>
+                        {{ form_end(formAnime) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

@@ -9,7 +9,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
  * Class SecurityController
@@ -58,16 +57,17 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/user/account", name="user_account")
-     * @return \Symfony\Component\HttpFoundation\Response
-     * @Security("is_fully_authenticated()")
+     * @Route("/role", name="security_role")
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function account(AuthenticationUtils $utils)
+    public function role()
     {
-        return $this->render('security/user/account.html.twig', [
-            'last_username' => $utils->getLastUsername(),
-            'error' => $utils->getLastAuthenticationError()
-        ]);
+        $role = $this->getUser()->getRoles();
+        if ($role == ['ROLE_USER']) {
+            return $this->redirectToRoute('user_account');
+        } elseif ($role == ['ROLE_ADMIN']) {
+            return $this->redirectToRoute('admin_account');
+        }
     }
 
     /**

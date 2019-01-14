@@ -9,7 +9,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
-class MangaController extends AbstractController
+class AnimesController extends AbstractController
 {
     private $utils;
     private $services;
@@ -23,14 +23,12 @@ class MangaController extends AbstractController
         $this->encoder = $encoder;
     }
 
-
     /**
-     * @Route("/manga", name="manga")
+     * @Route("/animes", name="animes")
      */
     public function index(Request $request)
     {
-
-        return $this->render('manga/index.html.twig', [
+        return $this->render('animes/index.html.twig', [
             'form' => $this->services->Registration($request, $this->encoder)->createView(),
             'last_username' => $this->utils->getLastUsername(),
             'error' => $this->utils->getLastAuthenticationError()
