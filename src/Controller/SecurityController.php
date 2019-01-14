@@ -14,7 +14,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 /**
  * Class SecurityController
  * @package App\Controller
- * @Route("/security")
+ * @Route("/")
  */
 class SecurityController extends AbstractController
 {
