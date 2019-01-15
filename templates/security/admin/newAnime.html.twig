@@ -5,31 +5,39 @@
 {% block body %}
     <div class="container mt-5">
         <div class="row">
-            <div class="col-10" align="center">
+            <div class="alert alert-dismissible alert-success badFlash col-10 offset-1 mb-5" id="goodFlash" align="center">
+                <strong id="name"></strong> ajouté avec succès !
+            </div>
+        </div>
+        <div class="row mb-5">
+            <div class="col-10 offset-1" align="center">
                 <div class="card text-white bg-secondary mb-3 newAnime">
-                    <div class="card-header text-secondary bg-primary newAnimHead">Ajout d'un animé</div>
+                    <h2 class="card-header text-secondary bg-primary newAnimHead">Ajout d'un animé</h2>
                     <div class="card-body text-primary">
-                        <h4 class="card-title"></h4>
                         {{ form_start(formAnime) }}
-                        {{ form_row(formAnime.name, { 'attr': {'style': 'border-radius: 5px'}}) }}
-                        {{ form_row(formAnime.synopsis, { 'attr': {'style': 'border-radius: 5px'}}) }}
                         <div class="row">
-                            <div class="col-6">
-                                {{ form_row(formAnime.duration, { 'attr': {'class': 'col-2', 'style': 'border-radius: 5px'}}) }}
+                            <div class="col-5">
+                                <h4 class="card-title">Nom</h4>
+                                {{ form_row(formAnime.name, { 'id': 'animName', 'attr': {'style': 'border-radius: 5px'}}) }}
                             </div>
-                            <div class="col-6">
-                                {{ form_row(formAnime.image, { 'attr': {'class': 'col-8', 'style': 'border-radius: 5px'}}) }}
+                            <div class="col-5">
+                                <h4 class="card-title">Lien vers l'image</h4>
+                                {{ form_row(formAnime.image, { 'attr': {'class': 'col-12', 'style': 'border-radius: 5px'}}) }}
+                            </div>
+                            <div class="col-2">
+                                <h4 class="card-title">Durée</h4>
+                                {{ form_row(formAnime.duration, { 'attr': {'class': 'col-8', 'style': 'border-radius: 5px'}}) }}
                             </div>
                         </div>
+                        <h4 class="card-title">Synopsis</h4>
+                        {{ form_row(formAnime.synopsis, { 'attr': {'style': 'border-radius: 5px'}}) }}
                         <div class="form-group">
+                            <h4 class="card-title">Genre(s)</h4>
                             <div class="col-12" align="center">
                                 {{ form_row(formAnime.type, { 'attr': {'class': 'col-12', 'style': 'display: inline-flex;flex-direction: row; justify-content: space-between'}}) }}
                             </div>
                         </div>
-
-                        <div class="custom-checkbox container">
-                        </div>
-                        <button type="submit" class="btn btn-dark">Créer</button>
+                        <button type="submit" class="btn btn-light buttonSize h col-3" id="ajaxButton">Créer</button>
                         {{ form_end(formAnime) }}
                     </div>
                 </div>
@@ -38,4 +46,38 @@
     </div>
 
 
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(document).submit(function(e){
+// ! il est impératif de commencer avec cette méthode qui va empêcher le navigateur d'envoyer le formulaire lui-même !
+            e.preventDefault();
+
+            let form = $(e.target);
+            let name = $('#animName').val();
+
+// !!!!!!!!!!!!!!!!!   ajaxSubmit du plugin ajaxForm nécessaire pour l'upload de donnée dans la db   !!!!!!!!!!!!!!!!
+            form.ajaxSubmit({
+                type: 'post',
+                success: function(data) {
+                    if (data === 'success') {
+                    } else {
+                        console.log('reject !')
+                    }
+                }
+            });
+
+//   !!!!!!!!!!!!!!!!!!!   Changement de l'opacity du flash avec deux effet en setTimeout   !!!!!!!!!!!!!!!!!!!!!!!
+
+            (document.querySelector('#name')).innerHTML = name;
+            window.setTimeout(function () {
+                $('#goodFlash').toggleClass('goodFlash').toggleClass('badFlash');
+                window.setTimeout(function () {
+                    $('#goodFlash').toggleClass('goodFlash').toggleClass('badFlash');
+                },3000);
+            });
+        });
+
+    </script>
 {% endblock %}

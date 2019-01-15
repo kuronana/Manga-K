@@ -2,7 +2,7 @@ body {
     font-family: 'Noto Sans', sans-serif;
 }
 
-h1, h2, h3, h4, h5 {
+h1, h2, h3, h4, h5, button.h {
     font-family: 'Lobster', cursive;
 }
 
@@ -30,27 +30,24 @@ a {
     box-shadow: 0 0 25px 1px black;
 }
 
-.orange {
-    color: orange;
-    transition: color 0.5s ease;
+/*
+!!!!!!!!!!!!!!!!!!!!!!   Flash avec js suite à un ajout d'animé   !!!!!!!!!!!!!!!!!
+ */
+
+.alert {
+    border-radius: 5px;
+    box-shadow: 0 0 25px 1px black;
 }
 
-.red {
-    color: darkred;
-}
-
-.spoiler-content {
-    display: inline-block;
-    width: 0;
-    height: 0;
-    opacity: 0;
-    overflow: hidden;
-    transition: opacity 0.5s;
-}
-
-.spoiler-content.visible {
-    display: inline;
-    width: auto;
-    height: auto;
+.goodFlash {
     opacity: 1;
+    transition: 0.5s ease;
+}
+.badFlash {
+    opacity: 0;
+    transition: 0.5s ease;
+}
+
+.buttonSize {
+    font-size: 30px;
 }

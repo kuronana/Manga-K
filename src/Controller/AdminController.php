@@ -8,6 +8,7 @@ use App\Form\AnimeType;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
@@ -64,10 +65,7 @@ class AdminController extends AbstractController
             $this->om->persist($anime);
             $this->om->flush();
 
-            $this->addFlash(
-                'new_anime',
-                'L\'animé '.$anime->getName().' a été ajouté avec succès.'
-            );
+            return new Response('success');
         }
         return $this->render('security/admin/newAnime.html.twig', [
             'formAnime' => $formAnime->createView(),

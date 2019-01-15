@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Form\RegistrationType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -21,12 +22,28 @@ class SecurityController extends AbstractController
      * @Route("/", name="security_home")
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function home(Request $request,
-                         UserPasswordEncoderInterface $encoder,
-                         AuthenticationUtils $utils)
+    public function home(AuthenticationUtils $utils)
+    {
+        return $this->render('security/home.html.twig', [
+            'last_username' => $utils->getLastUsername(),
+            'error' => $utils->getLastAuthenticationError()
+        ]);
+    }
+
+    /**
+     * @Route("/registration", name="registration",  condition="request.isXmlHttpRequest()")
+     * @param Request $request
+     * @param UserPasswordEncoderInterface $encoder
+     * @return Response
+     */
+    public function registration(Request $request,
+                                 UserPasswordEncoderInterface $encoder)
     {
         $user = new User();
-        $form = $this->createForm(RegistrationType::class, $user);
+        $form = $this->createForm(RegistrationType::class, $user,
+            [
+                'action' => $this->generateUrl($request->get('_route'))
+            ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()){
@@ -38,21 +55,10 @@ class SecurityController extends AbstractController
             $manager->persist($user);
             $manager->flush();
 
-            $this->addFlash(
-                'registration_valid',
-                'Inscription validée =)'
-            );
-        } elseif ($form->isSubmitted()) {
-            $this->addFlash(
-                'registration_invalid',
-                'Informations d\'inscription incorrectes.'
-            );
+            return new Response('success');
         }
-
-        return $this->render('security/home.html.twig', [
+        return $this->render('security/_registration.html.twig', [
             'form' => $form->createView(),
-            'last_username' => $utils->getLastUsername(),
-            'error' => $utils->getLastAuthenticationError()
         ]);
     }
 

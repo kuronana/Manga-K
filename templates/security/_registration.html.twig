@@ -1,0 +1,28 @@
+{{ form_start(form) }}
+
+<div class="row">
+    <div class="col-12" id="mail">
+        {{ form_row(form.mail, {'label' : 'Adresse mail'}) }}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        {{ form_row(form.username, {'label' : 'Pseudo'}) }}
+    </div>
+    <div class="col-6">
+        {{ form_row(form.password, {'label' : 'Mot de passe'}) }}
+    </div>
+    <div class="col-6">
+        {{ form_row(form.confirm_password, {'label' : 'Confirmez votre mot de passe'}) }}
+    </div>
+</div>
+
+</div>
+<div class="container">
+    <div class="modal-footer row justify-content-between">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+        <button type="submit" class="btn btn-primary">Valider</button>
+    </div>
+</div>
+{{ form_end(form) }}

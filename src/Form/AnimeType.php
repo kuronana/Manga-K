@@ -18,24 +18,27 @@ class AnimeType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, [
-                'label' => 'Nom'
+                'label' => false
             ])
             ->add('image', TextType::class, [
-                'label' => 'Lien vers l\'image'
+                'label' => false
             ])
             ->add('synopsis', TextareaType::class, [
+                'label' => false,
                 'attr' => [
                     'rows' => 5
                 ]
             ])
             ->add('duration', IntegerType::class, [
-                'label' => 'Durée par épisode'
+                'label' => false
             ])
             ->add('type', EntityType::class, [
+                'label' => false,
                 'class' => Type::class,
                 'choice_label' => 'name',
                 'expanded' => true,
                 'multiple' => true,
+                'label_attr' => ['class' => 'checkbox-custom']
             ])
         ;
     }
