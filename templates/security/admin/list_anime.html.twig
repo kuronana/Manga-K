@@ -3,22 +3,61 @@
 {% block title %}Manka-K Compte{% endblock %}
 
 {% block body %}
-    <table class="table table-hover table-dark text-center">
-        <thead>
-        <tr>
-            <th scope="col">Nom</th>
-            <th scope="col">Synopsis</th>
-            <th scope="col">Durée</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for anime in animes %}
-            <tr>
-                <th scope="row">{{ anime.name }}</th>
-                <td class="text-justify">{{ anime.synopsis }}</td>
-                <td>{{ anime.duration }}</td>
+    <div class="container mt-5">
+        <table class="table table-hover table-striped" id="dataTable">
+            <thead class="bg-primary">
+            <tr align="center">
+                <th scope="col">Nom</th>
+                <th scope="col">Synopsis</th>
+                <th scope="col">Genre(s)</th>
+                <th scope="col">Durée</th>
             </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+            {% for anime in animes %}
+                <tr align="center">
+                    <th scope="row">{{ anime.name }}</th>
+                    <td class="text-justify">{{ anime.synopsis }}</></td>
+                    <td>
+                        {% for type in anime.type %}
+                                <p class=" text-center col-12">{{ type.name }}</p>
+                        {% endfor %}
+                    </td>
+                    <td>{{ anime.duration }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(document).ready( function () {
+            $('#dataTable').DataTable( {
+                language: {
+                    processing:     "Traitement en cours...",
+                        search:         "Rechercher&nbsp;:",
+                        lengthMenu:    "Afficher _MENU_ &eacute;l&eacute;ments",
+                        info:           "Affichage de l'&eacute;lement _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
+                        infoEmpty:      "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
+                        infoFiltered:   "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+                        infoPostFix:    "",
+                        loadingRecords: "Chargement en cours...",
+                        zeroRecords:    "Aucun &eacute;l&eacute;ment &agrave; afficher",
+                        emptyTable:     "Aucune donnée disponible dans le tableau",
+                        paginate: {
+                        first:      "Premier",
+                            previous:   "Pr&eacute;c&eacute;dent",
+                            next:       "Suivant",
+                            last:       "Dernier"
+                    },
+                    aria: {
+                        sortAscending:  ": activer pour trier la colonne par ordre croissant",
+                            sortDescending: ": activer pour trier la colonne par ordre décroissant"
+                    }
+            }})
+        } );
+    </script>
+
 {% endblock %}

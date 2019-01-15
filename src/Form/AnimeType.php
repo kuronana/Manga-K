@@ -20,6 +20,9 @@ class AnimeType extends AbstractType
             ->add('name', TextType::class, [
                 'label' => 'Nom'
             ])
+            ->add('image', TextType::class, [
+                'label' => 'Lien vers l\'image'
+            ])
             ->add('synopsis', TextareaType::class, [
                 'attr' => [
                     'rows' => 5
