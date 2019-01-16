@@ -29,8 +29,10 @@ h1, h2, h3, h4, h5, button.h {
     transition: color 1s ease;
 }
 
-.titleSiteBlock:hover .titleSite {
-    color: wheat;
+.titleSiteBlock:hover {
+    background-color: wheat;
+    box-shadow: 1px 1px 5px 5px wheat;
+    opacity: 0.8;
     transition: 0.5s ease;
 }
 
