@@ -11,7 +11,7 @@
     {% block stylesheets %}{% endblock %}
 
 </head>
-<body class="container-fluid">
+<body>
 <div id="mySidenav" class="sidenav">
     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
     {% if app.user %}
@@ -20,9 +20,9 @@
                 <a class="btn btn-dark bg-primary" style="color: white" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">Animé</a>
             </p>
             <div class="collapse" align="center" id="collapseExample">
-                <a class="p-4" href="{{ path('list_anime') }}"><p class="links">Liste</p></a>
+                <a class="p-4 titleSiteBlock" href="{{ path('list_anime') }}"><p class="titleSite">Liste</p></a>
                 <hr style="border: 0.5px solid white">
-                <a class="p-4" href="{{ path('new_anime') }}"><p class="links">Ajout</p></a>
+                <a class="p-4 titleSiteBlock" href="{{ path('new_anime') }}"><p class="titleSite">Ajout</p></a>
             </div>
         {% endif %}
     {% endif %}
@@ -51,12 +51,19 @@
     <div class="text-center">
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
             <div class="collapse navbar-collapse">
+                <ul class="navbar-nav mr-auto" id="fixNav" style="align-items: center">
+                    <div id="buttonNav" class="offNav nav-icon2 m-3" onclick="toggleNav()">
+                        <span class="bg-dark"></span>
+                        <span class="bg-dark"></span>
+                        <span class="bg-dark"></span>
+                        <span class="bg-dark"></span>
+                        <span class="bg-dark"></span>
+                        <span class="bg-dark"></span>
+                    </div>
+                </ul>
                 <ul class="navbar-nav mr-auto" style="align-items: center">
-                    <li class="nav-item logo">
-                        <a  class="nav-item offNav" id="buttonNav" href="#" onclick="toggleNav()"><img src="../../assets/images/menu.png" class="pr-3" width="80%" alt=""></a>
-                    </li>
                     <li class="nav-item">
-                        <a class="navbar-brand pl-3 pr-3" style="color: white" href="{{ path('security_home') }}"><h1>Manga-K</h1></a>
+                        <a class="navbar-brand pl-3 pr-3" style="color: white; position: relative; left: 100px" href="{{ path('security_home') }}"><h1 class="titleSite">Manga-K</h1></a>
                     </li>
                 </ul>
             </div>
@@ -124,7 +131,6 @@
 <script src="../assets/js/js.js"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.2.2/jquery.form.min.js"></script>
-{% block javascripts %}{% endblock %}
 <script>
     //  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   Ajax pour l'inscription   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -163,7 +169,7 @@
     });
 </script>
 <script>
-    /* Set the width of the side navigation to 0 and the left margin of the page content to 0, and the background color of body to white */
+    /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   Off-Canvas   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
     function closeNav() {
         document.getElementById("buttonNav").classList.replace('onNav', 'offNav');
         document.getElementById("mySidenav").style.width = "0";
@@ -174,6 +180,7 @@
         document.getElementById("main").style.marginLeft = "0";
         document.getElementById("backCan").style.backgroundColor = 'transparent';
         document.getElementById("backCan").style.opacity = '0';
+        document.getElementById("buttonNav").classList.remove('open')
     }
 
     function toggleNav() {
@@ -189,6 +196,7 @@
             setTimeout(function (){
                 document.getElementById("backCan").style.opacity = '0.5'
             },200);
+            document.getElementById("buttonNav").classList.add('open')
         } else {
             document.getElementById("buttonNav").classList.replace('onNav', 'offNav');
             document.getElementById("mySidenav").style.width = "0";
@@ -199,8 +207,10 @@
             document.getElementById("main").style.marginLeft = "0";
             document.getElementById("backCan").style.backgroundColor = 'transparent';
             document.getElementById("backCan").style.opacity = '0';
+            document.getElementById("buttonNav").classList.remove('open')
         }
     }
 </script>
+{% block javascripts %}{% endblock %}
 </body>
 </html>

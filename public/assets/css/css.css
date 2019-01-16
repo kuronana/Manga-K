@@ -2,6 +2,13 @@ body {
     font-family: 'Noto Sans', sans-serif;
 }
 
+#carouselExampleFade {
+    z-index: 0;
+}
+
+.carousel-item {
+    transition: 2s ease-in-out;
+}
 h1, h2, h3, h4, h5, button.h {
     font-family: 'Lobster', cursive;
 }
@@ -9,10 +16,22 @@ h1, h2, h3, h4, h5, button.h {
 .navbar {
     box-shadow: 0 0 10px 5px black;
     z-index: 1;
+    height: 100px;
 }
 
-.links {
+#fixNav {
+    position: fixed;
+    top: 15px;
+}
+
+.titleSite {
     color: white;
+    transition: color 1s ease;
+}
+
+.titleSiteBlock:hover .titleSite {
+    color: wheat;
+    transition: 0.5s ease;
 }
 
 .nav-item.logo {
@@ -124,11 +143,91 @@ a {
 /* Style page content - use this if you want to push the page content to the right when you open the side navigation */
 #main {
     transition: margin-left .5s;
-    padding: 20px;
 }
 
 /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
 @media screen and (max-height: 450px) {
     .sidenav {padding-top: 15px;}
     .sidenav a {font-size: 18px;}
+}
+
+/*
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   button burger   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ */
+
+.nav-icon2 {
+    width: 60px;
+    height: 45px;
+    position: relative;
+    margin: 50px auto;
+    transform: rotate(0deg);
+    transition: 1s ease-in-out;
+    cursor: pointer;
+}
+
+.nav-icon2 span {
+    display: block;
+    position: absolute;
+    height: 7px;
+    width: 50%;
+    opacity: 1;
+    transition: 1s ease-in-out;
+}
+
+.nav-icon2 span:nth-child(even) {
+    left: 50%;
+}
+
+.nav-icon2 span:nth-child(odd) {
+    left:0px;
+}
+
+.nav-icon2 span:nth-child(1), .nav-icon2 span:nth-child(2) {
+    top: 0px;
+}
+
+.nav-icon2 span:nth-child(3), .nav-icon2 span:nth-child(4) {
+    top: 18px;
+}
+
+.nav-icon2 span:nth-child(5), .nav-icon2 span:nth-child(6) {
+    top: 36px;
+}
+
+.nav-icon2.open span:nth-child(1),.nav-icon2.open span:nth-child(6) {
+    transform: rotate(45deg);
+}
+
+.nav-icon2.open span:nth-child(2),.nav-icon2.open span:nth-child(5) {
+    transform: rotate(-45deg);
+}
+
+.nav-icon2.open span:nth-child(1) {
+    left: 5px;
+    top: 7px;
+}
+
+.nav-icon2.open span:nth-child(2) {
+    left: calc(50% - 5px);
+    top: 7px;
+}
+
+.nav-icon2.open span:nth-child(3) {
+    left: -50%;
+    opacity: 0;
+}
+
+.nav-icon2.open span:nth-child(4) {
+    left: 100%;
+    opacity: 0;
+}
+
+.nav-icon2.open span:nth-child(5) {
+    left: 5px;
+    top: 29px;
+}
+
+.nav-icon2.open span:nth-child(6) {
+    left: calc(50% - 5px);
+    top: 29px;
 }
