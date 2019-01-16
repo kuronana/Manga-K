@@ -58,7 +58,9 @@ class AdminController extends AbstractController
         $genres = $this->getDoctrine()->getRepository(Type::class)->findAll();
 
         $anime = new Animes();
-        $formAnime = $this->createForm(AnimeType::class, $anime);
+        $formAnime = $this->createForm(AnimeType::class, $anime, [
+            'action' => $this->generateUrl($request->get('_route'))
+        ]);
         $formAnime->handleRequest($request);
 
         if ($formAnime->isSubmitted() && $formAnime->isValid()) {

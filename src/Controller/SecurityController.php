@@ -24,6 +24,17 @@ class SecurityController extends AbstractController
      */
     public function home(AuthenticationUtils $utils)
     {
+        if ($this->getUser()) {
+            $role = $this->getUser()->getRoles();
+            dump($role);
+
+            return $this->render('security/home.html.twig', [
+                'last_username' => $utils->getLastUsername(),
+                'error' => $utils->getLastAuthenticationError(),
+                'role' => $role
+            ]);
+        }
+
         return $this->render('security/home.html.twig', [
             'last_username' => $utils->getLastUsername(),
             'error' => $utils->getLastAuthenticationError()
@@ -40,10 +51,9 @@ class SecurityController extends AbstractController
                                  UserPasswordEncoderInterface $encoder)
     {
         $user = new User();
-        $form = $this->createForm(RegistrationType::class, $user,
-            [
-                'action' => $this->generateUrl($request->get('_route'))
-            ]);
+        $form = $this->createForm(RegistrationType::class, $user, [
+            'action' => $this->generateUrl($request->get('_route'))
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()){

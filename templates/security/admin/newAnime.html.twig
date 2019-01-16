@@ -5,15 +5,15 @@
 {% block body %}
     <div class="container mt-5">
         <div class="row">
-            <div class="alert alert-dismissible alert-success badFlash col-10 offset-1 mb-5" id="goodFlash" align="center">
-                <strong id="name"></strong> ajouté avec succès !
+            <div class="alert alert-dismissible alert-success badFlash col-8 offset-2 mb-5" id="goodFlash" align="center">
+                <strong id="name">p</strong>
             </div>
         </div>
         <div class="row mb-5">
             <div class="col-10 offset-1" align="center">
                 <div class="card text-white bg-secondary mb-3 newAnime">
-                    <h2 class="card-header text-secondary bg-primary newAnimHead">Ajout d'un animé</h2>
-                    <div class="card-body text-primary">
+                    <h2 class="card-header bg-primary newAnimHead" style="color: white">Ajout d'un animé</h2>
+                    <div class="card-body"  style="color: white">
                         {{ form_start(formAnime) }}
                         <div class="row">
                             <div class="col-5">
@@ -55,29 +55,52 @@
             e.preventDefault();
 
             let form = $(e.target);
-            let name = $('#animName').val();
+            let name = '<strong>' + $('#animName').val() + '<strong>' + ' ajouté avec succès !';
+            let dopple = 'Cet animé est déjà enregistré.';
 
 // !!!!!!!!!!!!!!!!!   ajaxSubmit du plugin ajaxForm nécessaire pour l'upload de donnée dans la db   !!!!!!!!!!!!!!!!
             form.ajaxSubmit({
                 type: 'post',
                 success: function(data) {
                     if (data === 'success') {
-                    } else {
-                        console.log('reject !')
-                    }
-                }
-            });
 
 //   !!!!!!!!!!!!!!!!!!!   Changement de l'opacity du flash avec deux effet en setTimeout   !!!!!!!!!!!!!!!!!!!!!!!
 
-            (document.querySelector('#name')).innerHTML = name;
-            window.setTimeout(function () {
-                $('#goodFlash').toggleClass('goodFlash').toggleClass('badFlash');
-                window.setTimeout(function () {
-                    $('#goodFlash').toggleClass('goodFlash').toggleClass('badFlash');
-                },3000);
-            });
-        });
+                        (document.querySelector('#name')).innerHTML = name;
+                        window.setTimeout(function () {
+                            $('#goodFlash').toggleClass('badFlash').toggleClass('goodFlash').removeClass('alert-warning').addClass('alert-success');
+                            window.setTimeout(function () {
+                                $('#goodFlash').toggleClass('goodFlash').toggleClass('goodFlash2');
+                                window.setTimeout(function () {
+                                    $('#goodFlash').toggleClass('goodFlash2').toggleClass('badFlash2');
+                                    window.setTimeout(function () {
+                                        $('#goodFlash').toggleClass('badFlash2').toggleClass('badFlash');
+                                    }, 500);
+                                }, 3000);
+                            }, 500);
+                        });
+                    } else {
 
+//   !!!!!!!!!!!!!!!!!!!   Changement de l'opacity du flash avec deux effet en setTimeout   !!!!!!!!!!!!!!!!!!!!!!!
+
+                        (document.querySelector('#name')).innerHTML = dopple;
+                        window.setTimeout(function () {
+                            $('#goodFlash').toggleClass('badFlash').toggleClass('goodFlash').removeClass('alert-success').addClass('alert-warning');
+                            window.setTimeout(function () {
+                                $('#goodFlash').toggleClass('goodFlash').toggleClass('goodFlash2');
+                                window.setTimeout(function () {
+                                    $('#goodFlash').toggleClass('goodFlash2').toggleClass('badFlash2');
+                                    window.setTimeout(function () {
+                                        $('#goodFlash').toggleClass('badFlash2').toggleClass('badFlash');
+                                    }, 500);
+                                }, 3000);
+                            }, 500);
+                        });
+                    }
+
+                }
+            });
+
+        });
     </script>
 {% endblock %}
