@@ -24,17 +24,6 @@ class SecurityController extends AbstractController
      */
     public function home(AuthenticationUtils $utils)
     {
-        if ($this->getUser()) {
-            $role = $this->getUser()->getRoles();
-            dump($role);
-
-            return $this->render('security/home.html.twig', [
-                'last_username' => $utils->getLastUsername(),
-                'error' => $utils->getLastAuthenticationError(),
-                'role' => $role
-            ]);
-        }
-
         return $this->render('security/home.html.twig', [
             'last_username' => $utils->getLastUsername(),
             'error' => $utils->getLastAuthenticationError()

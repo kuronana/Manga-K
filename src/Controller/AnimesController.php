@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Form\AnimeType;
 use App\Repository\AnimesRepository;
 use App\Service\Services;
+use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,15 +18,18 @@ class AnimesController extends AbstractController
     private $services;
     private $encoder;
     private $animesRepository;
+    private $om;
     public function __construct(AuthenticationUtils $utils,
                                 Services $services,
                                 UserPasswordEncoderInterface $encoder,
-                                AnimesRepository $animesRepository)
+                                AnimesRepository $animesRepository,
+                                ObjectManager $om)
     {
         $this->utils = $utils;
         $this->services = $services;
         $this->encoder = $encoder;
         $this->animesRepository = $animesRepository;
+        $this->om = $om;
     }
 
     /**

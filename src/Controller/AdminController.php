@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Animes;
 use App\Entity\Type;
 use App\Form\AnimeType;
+use App\Repository\AnimesRepository;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,10 +21,13 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 class AdminController extends AbstractController
 {
     private $om;
+    private $animesRepository;
 
-    public function __construct(ObjectManager $manager)
+    public function __construct(ObjectManager $manager,
+                                AnimesRepository $animesRepository)
     {
         $this->om = $manager;
+        $this->animesRepository = $animesRepository;
     }
 
     /**
@@ -73,5 +77,55 @@ class AdminController extends AbstractController
             'formAnime' => $formAnime->createView(),
             'genres' => $genres
         ]);
+    }
+
+    /**
+     * @Route("/updateAnime/{id}", name="update_anime")
+     * @param Request $request
+     * @param $id
+     * @return Response
+     */
+    public function updateAnime(Request $request,
+                           $id)
+    {
+        $anime = $this->animesRepository->findOneBy([
+            'id' => $id
+        ]);
+        $formUpdateAnime = $this->createForm(AnimeType::class, $anime);
+        $formUpdateAnime->handleRequest($request);
+
+        if ($formUpdateAnime->isSubmitted() && $formUpdateAnime->isValid()) {
+            $this->om->persist($anime);
+            $this->om->flush();
+
+            return new Response('success');
+        }
+
+        return $this->render('security/admin/updateAnime.html.twig', [
+            'formUpdateAnime' => $formUpdateAnime->createView(),
+            'anime' => $anime
+        ]);
+    }
+
+    /**
+     * @Route("/deleteAnime/{id}", name="delete_anime")
+     * @param Request $request
+     * @param $id
+     * @return Response
+     */
+    public function deleteAnime($id)
+    {
+        $anime = $this->animesRepository->findOneBy([
+            'id' => $id
+        ]);
+            $this->om->remove($anime);
+            $this->om->flush();
+
+            $this->addFlash(
+                'deleteAnime',
+                'Animé supprimé avec succès'
+            );
+
+            return $this->redirectToRoute("list_anime");
     }
 }

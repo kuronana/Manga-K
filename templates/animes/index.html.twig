@@ -3,65 +3,85 @@
 {% block title %}Animes - Manga-K{% endblock %}
 
 {% block body %}
-    <div class="row">
-        <h1 class="ml-3 mt-3 col-6">Liste des animés</h1>
-
-        <input class="form-control mt-4 ml-auto mr-4 col-2 text-center" id="animeList" type="text" placeholder="Rechercher">
-    </div>
-
-
-    <table class="table table-hover text-center">
-        <thead>
+    <div class="container-fluid">
+        <h1 class="text-center mt-3 mb-3">Liste des animés</h1>
+        <table class="table table-hover text-center" id="dataTable">
+            <thead>
             <tr>
                 <th></th>
                 <th></th>
                 <th>Durée</th>
                 <th>actions</th>
             </tr>
-        </thead>
-        <tbody id="animTable">
-        {% for anime in animes %}
-            <tr>
-                <td class="align-middle"><img src="{{ anime.image }}" alt=""></td>
+            </thead>
+            <tbody id="animTable">
+            {% for anime in animes %}
+                <tr>
+                    <td class="align-middle"><img src="{{ anime.image }}" alt=""></td>
 
-                <td class="text-justify align-middle col-6 pb-3">
-                    <h3 class="text-center">{{ anime.name }}</h3>
-                    <button class="btn btn-primary btnlg btn-block" type="button" data-toggle="collapse" data-target="#synop{{ loop.index0 }}" aria-expanded="false" aria-controls="synop{{ loop.index0 }}">
-                        Voir le synopsis
-                    </button>
-                    <div class="collapse" id="synop{{ loop.index0 }}">
-                        <div class="card card-body">
-                            {{ anime.synopsis }}
+                    <td class="text-justify align-middle col-6 pb-3">
+                        <h3 class="text-center">{{ anime.name }}</h3>
+                        <button class="btn btn-primary btnlg btn-block" type="button" data-toggle="collapse" data-target="#synop{{ loop.index0 }}" aria-expanded="false" aria-controls="synop{{ loop.index0 }}">
+                            Voir le synopsis
+                        </button>
+                        <div class="collapse" id="synop{{ loop.index0 }}">
+                            <div class="card card-body">
+                                {{ anime.synopsis }}
+                            </div>
                         </div>
-                    </div>
-                </td>
-                <td class="align-middle">{{ anime.duration }} mn</td>
-                <td class="align-middle">
-                    <button type="button" class="btn btn-primary">Voir plus</button>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="5">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-<button id="pouet"> pouet</button>
-    <div id="results"></div>
+                    </td>
+                    <td class="align-middle">{{ anime.duration }} mn</td>
+                    <td class="align-middle">
+                        <button type="button" class="btn btn-primary" onclick="window.location.href= '{{ path('update_anime', { 'id' : anime.id}) }}'">Modifier</button>
+                        <button type="button" class="btn btn-primary">Voir plus</button>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock %}
 
 {% block javascripts %}
     <script>
-        $(document).ready(function(){
-            $("#animeList").on("keyup", function() {
-                let value = $(this).val().toLowerCase();
-                $("#animTable tr").filter(function() {
-                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-                });
-            });
-        });
+        $(document).ready( function () {
+            $('#dataTable').DataTable( {
+                language: {
+                    processing:     "Traitement en cours...",
+                    search:         '',
+                    searchPlaceholder: 'Rechercher',
+                    lengthMenu:    "Afficher _MENU_ &eacute;l&eacute;ments",
+                    info:           "Affichage de l'&eacute;lement _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
+                    infoEmpty:      "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
+                    infoFiltered:   "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+                    infoPostFix:    "",
+                    loadingRecords: "Chargement en cours...",
+                    zeroRecords:    "Aucun &eacute;l&eacute;ment &agrave; afficher",
+                    emptyTable:     "Aucune donnée disponible dans le tableau",
+                    paginate: {
+                        first:      "Premier",
+                        previous:   "Pr&eacute;c&eacute;dent",
+                        next:       "Suivant",
+                        last:       "Dernier"
+                    },
+                    aria: {
+                        sortAscending:  ": activer pour trier la colonne par ordre croissant",
+                        sortDescending: ": activer pour trier la colonne par ordre décroissant"
+                    }
+                }})
+        } );
 
+        $(document).ready(function () {
+            $('.dataTables_filter').addClass('d-flex justify-content-end');
+            $('#dataTable_wrapper label, .dataTables_info').css({'font-family' : 'Lobster, cursive', 'font-size' : '20px'});
+            $('#dataTable_wrapper .dataTables_length label').addClass('col-12');
+            $('#dataTable_wrapper .dataTables_length label select').addClass('col-2');
+            $('#dataTable_wrapper input').css({'text-align' : 'center'});
+        });
     </script>
 {% endblock %}
 

@@ -3,7 +3,15 @@
 {% block title %}Manka-K Compte{% endblock %}
 
 {% block body %}
-    <div class="container mt-5">
+
+    {% for message in app.flashes('deleteAnime') %}
+        <div class="col-6  offset-3 mt-5 alert alert-dismissible fade out alert-success fade show" align="center">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>{{ message }}</strong>
+        </div>
+    {% endfor %}
+
+    <div class="container-fluid mt-5">
         <table class="table table-hover table-striped" id="dataTable">
             <thead class="bg-primary">
             <tr align="center">
@@ -11,19 +19,21 @@
                 <th scope="col">Synopsis</th>
                 <th scope="col">Genre(s)</th>
                 <th scope="col">Durée</th>
+                <th scope="col">Modifier</th>
             </tr>
             </thead>
             <tbody>
             {% for anime in animes %}
                 <tr align="center">
-                    <th scope="row">{{ anime.name }}</th>
-                    <td class="text-justify">{{ anime.synopsis }}</></td>
-                    <td>
+                    <th scope="row" class="align-middle">{{ anime.name }} <img class="pt-3" src="{{ anime.image }}" alt=""></th>
+                    <td class="text-justify align-middle">{{ anime.synopsis }}</td>
+                    <td class="align-middle">
                         {% for type in anime.type %}
                                 <p class=" text-center col-12">{{ type.name }}</p>
                         {% endfor %}
                     </td>
-                    <td>{{ anime.duration }}</td>
+                    <td class="align-middle">{{ anime.duration }}</td>
+                    <td class="align-middle"><button type="button" class="btn btn-primary" onclick="window.location.href= '{{ path('update_anime', { 'id' : anime.id}) }}'">Modifier</button></td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -37,7 +47,8 @@
             $('#dataTable').DataTable( {
                 language: {
                     processing:     "Traitement en cours...",
-                        search:         "Rechercher&nbsp;:",
+                        search:         '',
+                        searchPlaceholder: 'Rechercher',
                         lengthMenu:    "Afficher _MENU_ &eacute;l&eacute;ments",
                         info:           "Affichage de l'&eacute;lement _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
                         infoEmpty:      "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
@@ -58,6 +69,14 @@
                     }
             }})
         } );
+
+        $(document).ready(function () {
+            $('.dataTables_filter').addClass('d-flex justify-content-end');
+            $('#dataTable_wrapper label, .dataTables_info').css({'font-family' : 'Lobster, cursive', 'font-size' : '20px'});
+            $('#dataTable_wrapper .dataTables_length label').addClass('col-12');
+            $('#dataTable_wrapper .dataTables_length label select').addClass('col-2');
+            $('#dataTable_wrapper input').css({'text-align' : 'center'});
+        });
     </script>
 
 {% endblock %}
