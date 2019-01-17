@@ -37,7 +37,8 @@
                                 {{ form_row(formAnime.type, { 'attr': {'class': 'col-12', 'style': 'display: inline-flex;flex-direction: row; justify-content: space-between'}}) }}
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-light buttonSize h col-3" id="ajaxButton">Créer</button>
+                        <button type="button" class="btn btn-warning h col-3" onclick="location.href = '{{ path('animes') }}'">Retour</button>
+                        <button type="submit" class="btn btn-primary buttonSize h col-3 offset-3" id="ajaxButton">Créer</button>
                         {{ form_end(formAnime) }}
                     </div>
                 </div>

@@ -21,9 +21,8 @@ security:
             provider: in_database
 
             form_login:
-                login_path: security_home
                 check_path: security_login
-                default_target_path: security_role
+                default_target_path: referer_page
 
             logout:
                 path: security_logout

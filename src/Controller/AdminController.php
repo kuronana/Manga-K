@@ -40,19 +40,6 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/list", name="list_anime")
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function listAnime()
-    {
-        $animes = $this->getDoctrine()->getRepository(Animes::class)->findAll();
-
-        return $this->render('security/admin/list_anime.html.twig', [
-            'animes' => $animes
-        ]);
-    }
-
-    /**
      * @Route("/newAnime", name="new_anime")
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
@@ -126,6 +113,6 @@ class AdminController extends AbstractController
                 'Animé supprimé avec succès'
             );
 
-            return $this->redirectToRoute("list_anime");
+            return $this->redirectToRoute("animes");
     }
 }

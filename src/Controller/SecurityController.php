@@ -76,6 +76,15 @@ class SecurityController extends AbstractController
     }
 
     /**
+     * @Route("/referer", name="referer_page")
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function referer()
+    {
+        return $this->redirect($_SERVER['HTTP_REFERER']);
+    }
+
+    /**
      * @Route("/login", name="security_login")
      */
     public function login()
