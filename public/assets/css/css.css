@@ -1,5 +1,7 @@
 body {
     font-family: 'Noto Sans', sans-serif;
+    opacity: 0;
+    transition: 1s ease;
 }
 
 #carouselExampleFade {
