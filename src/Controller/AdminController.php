@@ -6,6 +6,7 @@ use App\Entity\Animes;
 use App\Entity\Type;
 use App\Form\AnimeType;
 use App\Repository\AnimesRepository;
+use App\Repository\UserRepository;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,27 +18,151 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
  * @Route("/admin")
  * Class AdminController
  * @package App\Controller
+ * @Security("is_granted('ROLE_ADMIN')")
  */
 class AdminController extends AbstractController
 {
     private $om;
     private $animesRepository;
+    private $userRepository;
 
     public function __construct(ObjectManager $manager,
-                                AnimesRepository $animesRepository)
+                                AnimesRepository $animesRepository,
+                                UserRepository $userRepository)
     {
         $this->om = $manager;
         $this->animesRepository = $animesRepository;
+        $this->userRepository = $userRepository;
     }
 
+    //   !!!!!!!!!!!!!!!!!!!!!!!!!!   Partie Comptes   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
     /**
-     * @Route("/account", name="admin_account")
-     * @Security("is_granted('ROLE_ADMIN')")
+     * @Route("/account", name="my_admin_account")
+     * @return Response
      */
     public function account()
     {
-        return $this->render('security/admin/account.html.twig');
+        $admin = $this->getUser();
+
+        return $this->render('security/admin/account.html.twig', [
+            'admin' => $admin
+        ]);
     }
+
+    /**
+     * @Route("/account/list/user", name="user_list")
+     * @return Response
+     */
+    public function  listAccountUser()
+    {
+        $users = $this->userRepository->findByRoles('ROLE_USER');
+
+        return $this->render('/security/admin/userAccountList.html.twig', [
+            'users' => $users
+        ]);
+    }
+
+    /**
+     * @Route("/account/list/admin", name="admin_list")
+     * @return Response
+     */
+    public function  listAccountAdmin()
+    {
+        $admins = $this->userRepository->findByRoles(['ROLE_ADMIN', 'ROLE_SUPER_ADMIN']);
+
+        return $this->render('/security/admin/adminAccountList.html.twig', [
+            'admins' => $admins
+        ]);
+    }
+
+    /**
+     * @Route("/account/user/{id}", name="account_user")
+     * @param $id
+     * @return Response
+     */
+    public function AccountUser($id)
+    {
+        $user = $this->userRepository->findOneById($id);
+
+        return $this->render('/security/admin/userAccount.html.twig', [
+            'user' => $user
+        ]);
+    }
+
+    /**
+     * @Route("/account/admin/{id}", name="account_admin")
+     * @param $id
+     * @return Response
+     */
+    public function AccountAdmin($id)
+    {
+        $admin = $this->userRepository->findOneById($id);
+
+        return $this->render('/security/admin/adminAccount.html.twig', [
+            'admin' => $admin
+        ]);
+    }
+
+    /**
+     * @Route("/account/user/switchRole/{id}", name="switch_role")
+     * @param $id
+     * @return Response
+     */
+    public function AccountSwitchRole($id)
+    {
+
+        $user = $this->userRepository->findOneById($id);
+        if ($user->getRoles() == ['ROLE_USER']) {
+            $user->setRoles('ROLE_ADMIN');
+        } else {
+            $user->setRoles('ROLE_USER');
+        }
+        $this->om->persist($user);
+        $this->om->flush();
+
+        return new Response('switch');
+    }
+
+    /**
+     * @Route("/account/user/switchRoleSup/{id}", name="switch_role_sup")
+     * @param $id
+     * @return Response
+     */
+    public function AccountSwitchRoleSup($id)
+    {
+
+        $user = $this->userRepository->findOneById($id);
+        if ($user->getRoles() == ['ROLE_ADMIN']) {
+            $user->setRoles('ROLE_SUPER_ADMIN');
+            $this->om->persist($user);
+            $this->om->flush();
+
+            return new Response('switchSup');
+        } else {
+            $user->setRoles('ROLE_ADMIN');
+            $this->om->persist($user);
+            $this->om->flush();
+
+            return new Response('switch');
+        }
+    }
+
+    /**
+     * @Route("/account/user/delete/{id}", name="user_delete")
+     * @param $id
+     * @return Response
+     */
+    public function deleteUser($id)
+    {
+        $user = $this->userRepository->findOneById($id);
+        $this->om->remove($user);
+        $this->om->flush();
+
+        return new Response('success');
+    }
+
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!   Partie Animés   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     /**
      * @Route("/newAnime", name="new_anime")
@@ -107,11 +232,6 @@ class AdminController extends AbstractController
         ]);
             $this->om->remove($anime);
             $this->om->flush();
-
-            $this->addFlash(
-                'deleteAnime',
-                'Animé supprimé avec succès'
-            );
 
             return $this->redirectToRoute("animes");
     }

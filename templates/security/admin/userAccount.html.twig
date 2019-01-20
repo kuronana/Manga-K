@@ -13,84 +13,74 @@
         <div class="row mb-5">
             <div class="col-10 offset-1" align="center">
                 <div class="card text-white bg-secondary mb-3 account">
-                    <h2 class="card-header bg-primary accountHead" style="color: white">Mon compte</h2>
+                    <h2 class="card-header bg-primary accountHead" style="color: white">Compte de {{ user.username }}</h2>
                     <div class="card-body"  style="color: white">
                         <div class="row justify-content-center">
                             <div class="col-5">
                                 <div class="jumbotron">
                                     <h4 class="card-title">Pseudo</h4>
-                                    <div>{{ admin.username }}</div>
+                                    <div>{{ user.username }}</div>
                                 </div>
                             </div>
                             <div class="col-5">
                                 <div class="jumbotron">
                                     <h4 class="card-title">E-Mail</h4>
-                                    <div>{{ admin.mail }}</div>
+                                    <div>{{ user.mail }}</div>
                                 </div>
                             </div>
                         </div>
-                        <div>
-                            {% if app.user.roles[0] == 'ROLE_ADMIN' %}
-                                <button type="button" class="btn btn-outline-danger btn-lg h col-3" id="buttonSwitch" data-target="#switchInf" data-toggle="modal">Se rétrograder au rang d'utilisateur</button>
-                            {% elseif app.user.roles[0] == 'ROLE_SUPER_ADMIN' %}
-                                <button type="button" class="btn btn-outline-danger btn-lg h col-4" id="buttonSwitch" data-target="#switchSup" data-toggle="modal">Se rétrograder au rang d'administrateur</button>
-                            {% endif %}
+                        <div class="mt-3">
+                            <button type="button" class="btn btn-primary h col-3" onclick="location.href = '{{ path('user_list') }}'">Retour</button>
+                            <button type="button" class="btn btn-danger h col-3 offset-1" id="buttonDel" data-target="#del" data-toggle="modal">Supprimer</button>
+                            <button type="button" class="btn btn-outline-primary h col-3 offset-1" id="buttonSwitch" data-target="#switch" data-toggle="modal">Passer en administrateur</button>
                         </div>
-                        <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!   Modal de switch role   !!!!!!!!!!!!!!!!!!!!!!!!! -->
+                        <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!   Modal de suppression !!!!!!!!!!!!!!!!!!!!!!!!! -->
 
-                        <div class="modal fade" id="switchInf" tabindex="-1" role="dialog" aria-labelledby="del" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                        <div class="modal fade" id="del" tabindex="-1" role="dialog" aria-labelledby="del" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="text-primary">Rétrogradation au rang d'utilisateur</h5>
+                                        <h5 class="text-center pl-5 ml-5">Suppression du compte de {{ user.username }}</h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <p>Êtes vous certain de vouloir vous défaire du rang d'administrateur et de passer en utilisateur ?</p>
-                                        <p>Vous n'aurais plus accès aux priviléges qu'apporte le status d'administrateur !</p>
+                                        <p>Êtes vous certain de vouloir supprimer cet utilisateur ?</p>
                                     </div>
                                     <div class="modal-footer">
-                                        <form action="{{ path('switch_role', { 'id' : admin.id}) }}">
+                                        <form action="{{ path('user_delete', { 'id' : user.id}) }}">
+                                            <button type="submit" class="btn btn-danger" id="deleteUser">Confirmer</button>
+                                        </form>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!   Modal de switch role   !!!!!!!!!!!!!!!!!!!!!!!!! -->
+
+                        <div class="modal fade" id="switch" tabindex="-1" role="dialog" aria-labelledby="del" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="text-center pl-5 ml-5">Promotion de {{ user.username }} au rang d'administrateur</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Êtes vous certain de vouloir basculer cet utilisateur en administrateur ?</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <form action="{{ path('switch_role', { 'id' : user.id}) }}">
                                             <button type="submit" class="btn btn-primary" id="switchUser">Confirmer</button>
                                         </form>
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
                                     </div>
-                                    <small class="text-primary">Vous serez déconnecter afin de valider le changement de status.</small>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!   Modal de switch role Super_Admin   !!!!!!!!!!!!!!!!!!!!!!!!! -->
-
-                        <div class="modal fade" id="switchSup" tabindex="-1" role="dialog" aria-labelledby="del" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="text-primary">Rétrogradation au rang d'administrateur</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <p>Êtes vous certain de vouloir vous défaire du rang de Super Admin et de repasser en administrateur ?</p>
-                                        <p>Vous n'aurais plus les pleins pouvoirs !</p>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <form action="{{ path('switch_role_sup', { 'id' : admin.id}) }}">
-                                            <button type="submit" class="btn btn-primary" id="switchAdm">Confirmer</button>
-                                        </form>
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-                                    </div>
-                                    <small class="text-primary">Vous serez déconnecter afin de valider le changement de status.</small>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <div class="mt-5">
-                    <button type="button" class="btn btn-primary btn-lg h col-3" onclick="location.href = '{{ path('admin_list') }}'">Retour</button>
                 </div>
             </div>
         </div>
@@ -104,11 +94,13 @@
         $(document).submit(function(e){
 // ! il est impératif de commencer avec cette méthode qui va empêcher le navigateur d'envoyer le formulaire lui-même !
             e.preventDefault();
-            let role = 'Vous vous êtes rétrogradé !';
+            console.log('submit');
+            let remove = 'L\'utilisateur ' + '<strong>' + '{{ user.username }}' + '<strong>' + ' a été supprimé avec succès !';
+            let role = 'L\'utilisateur ' + '<strong>' + '{{ user.username }}' + '<strong>' + ' est maintenant administrateur !';
 
             $form = $(e.target);
-            let modalR = $('#switchInf');
-            let modalS = $('#switchSup');
+            let modal = $('#del');
+            let modalS = $('#switch');
 
             let $submitButton = $form.find(':submit');
             $submitButton.html('<i class="fas fa-spinner fa-pulse"></i>');
@@ -118,11 +110,36 @@
             $form.ajaxSubmit({
                 type: 'post',
                 success: function(data) {
+                    if (data === 'success') {
 
-                    modalR.modal('hide');
-                    modalS.modal('hide');
+                        modal.modal('hide');
+                        (document.querySelector('#name')).innerHTML = remove;
 
-                    if(data === 'switch') {
+                        let buttonDel = $('#buttonDel');
+                        buttonDel.html('<i class="fas fa-spinner fa-pulse"></i>');
+                        buttonDel.prop('disabled', true);
+
+                        window.setTimeout(function () {
+                            $('#goodFlash').toggleClass('badFlash').toggleClass('goodFlash').removeClass('alert-success').addClass('alert-danger');
+                            window.setTimeout(function () {
+                                $('#goodFlash').toggleClass('goodFlash').toggleClass('goodFlash2');
+                                window.setTimeout(function () {
+                                    $('#goodFlash').toggleClass('goodFlash2').toggleClass('badFlash2');
+                                    $submitButton.html('Bye Boy');
+                                    buttonDel.html('Bye Boy');
+                                    window.setTimeout(function () {
+                                        $('#goodFlash').toggleClass('badFlash2').toggleClass('badFlash');
+//   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   Redirection vers la liste d'user quand on supprime   !!!!!!!!!!!!!!!!!!!
+                                        window.setTimeout(function () {
+                                            window.location.href = '{{ path('user_list') }}';
+                                        }, 500);
+                                    }, 3000);
+                                }, 500);
+                            });
+                        })
+                    }else if(data === 'switch') {
+
+                        modalS.modal('hide');
                         (document.querySelector('#name')).innerHTML = role;
 
                         let buttonSwitch = $('#buttonSwitch');
@@ -135,13 +152,13 @@
                                 $('#goodFlash').toggleClass('goodFlash').toggleClass('goodFlash2');
                                 window.setTimeout(function () {
                                     $('#goodFlash').toggleClass('goodFlash2').toggleClass('badFlash2');
-                                    $submitButton.html('Stupid Boy');
-                                    buttonSwitch.html('Stupid Boy');
+                                    $submitButton.html('Félicitation Boy');
+                                    buttonSwitch.html('Félicitation Boy');
                                     window.setTimeout(function () {
                                         $('#goodFlash').toggleClass('badFlash2').toggleClass('badFlash');
 //   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   Redirection vers la liste d'user quand on switchRole   !!!!!!!!!!!!!!!!!!!
                                         window.setTimeout(function () {
-                                            window.location.href = '{{ path('security_logout') }}'
+                                            window.location.href = '{{ path('user_list') }}'
                                         }, 500);
                                     }, 500);
                                 }, 3000);

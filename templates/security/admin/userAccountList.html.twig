@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Manka-K Compte{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="text-center mt-3 mb-3">Liste des utilisateurs</h1>
+        <table class="table table-hover table-striped text-center" id="dataTable">
+            <thead>
+            <tr>
+                <th scope="col">Pseudo</th>
+                <th scope="col">Mail</th>
+                <th scope="col">actions</th>
+            </tr>
+            </thead>
+            <tbody id="animTable">
+            {% for user in users %}
+                <tr>
+                    <td class="text-justify align-middle text-primary pb-3" align="left">
+                        <h3 class="text-center">{{ user.username }}</h3>
+                    </td>
+                    <td class="align-middle">{{ user.mail }}</td>
+                    <td class="align-middle" align="center">
+                        <button type="button" class="btn btn-block col-5 btn-primary" onclick="window.location.href= '{{ path('account_user', { 'id' : user.id}) }}'">Détails</button>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

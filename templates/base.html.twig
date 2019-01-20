@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>{% block title %}Welcome!{% endblock %}</title>
     <link rel="stylesheet" href="https://bootswatch.com/4/superhero/bootstrap.min.css">
-    <link rel="stylesheet" href="../assets/css/css.css">
+    <link rel="stylesheet" href="/assets/css/css.css">
     <link href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
     <link href="https://fonts.googleapis.com/css?family=Noto+Sans|Lobster" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
@@ -15,27 +15,51 @@
 
 </head>
 <body>
+
+<!--  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   Body du Off-canvas   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+
 <div id="mySidenav" class="sidenav">
     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
     <p>
-        <a class="btn btn-dark bg-primary" style="color: white" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">Animé</a>
+        <a class="btn btn-dark bg-primary" style="color: white" data-toggle="collapse" href="#collapseAnime" role="button" aria-expanded="false" aria-controls="collapseAnime">Animé</a>
     </p>
-    <div class="collapse row mb-3" align="center" id="collapseExample">
+    <div class="collapse row mb-3" align="center" id="collapseAnime">
         <a class="refresh titleSiteBlock {% if app.user %}
-                                     {% if app.user.roles[0] == 'ROLE_ADMIN' %}
+                                     {% if app.user.roles[0] == 'ROLE_ADMIN' or app.user.roles[0] == 'ROLE_SUPER_ADMIN' %}
                                          col-6
                                      {% else %}
                                          col-12
                                      {% endif %}
                                  {% else %}
                                      col-12
-                                 {% endif %}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Liste des animés" href="{{ path('animes') }}"><img src="../../assets/images/anime/menu/animeList.png" alt="Liste"></a>
+                                 {% endif %}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Liste des animés" href="{{ path('animes') }}"><img src="/assets/images/anime/menu/animeList.png" alt="Liste"></a>
         {% if app.user %}
-            {% if app.user.roles[0] == 'ROLE_ADMIN' %}
-                <a class="titleSiteBlock col-6 refresh" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Ajouter un nouvel animé" href="{{ path('new_anime') }}"><img src="../../assets/images/anime/menu/new.png" alt="Ajout"></a>
+            {% if app.user.roles[0] == 'ROLE_ADMIN' or app.user.roles[0] == 'ROLE_SUPER_ADMIN' %}
+                <a class="titleSiteBlock col-6 refresh" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Ajouter un nouvel animé" href="{{ path('new_anime') }}"><img src="/assets/images/anime/menu/new.png" alt="Ajout"></a>
             {% endif %}
         {% endif %}
     </div>
+    {% if app.user %}
+        <p>
+            <a class="btn btn-dark bg-primary" style="color: white" data-toggle="collapse" href="#collapseAccount" role="button" aria-expanded="false" aria-controls="collapseAccount">Comptes</a>
+        </p>
+        <div class="collapse row mb-3" align="center" id="collapseAccount">
+            <a class="refresh titleSiteBlock {% if app.user.roles[0] == 'ROLE_ADMIN' or app.user.roles[0] == 'ROLE_SUPER_ADMIN' %}
+                                                 col-6
+                                             {% else %}
+                                                 col-12
+                                             {% endif %}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title={% if app.user.roles[0] == 'ROLE_ADMIN' or app.user.roles[0] == 'ROLE_SUPER_ADMIN' %}
+                                                                                                                                        "Comptes utilisateurs" href="{{ path('user_list') }}"
+                                                                                                                                     {% else %}
+                                                                                                                                          "Mon compte" href="{{ path('user_account') }}"
+                                                                                                                                     {% endif %}><img src="/assets/images/account/user.png" alt="Compte user"></a>
+            {% if app.user %}
+                {% if app.user.roles[0] == 'ROLE_ADMIN' or app.user.roles[0] == 'ROLE_SUPER_ADMIN' %}
+                    <a class="titleSiteBlock col-6 refresh" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Comptes admin" href="{{ path('admin_list') }}"><img src="/assets/images/account/admin.png" alt="Compte admin"></a>
+                {% endif %}
+            {% endif %}
+        </div>
+    {% endif %}
     {% if not app.user %}
         <p align="center">
             <a href="#" class="nav-link bg-primary" style="color: white" data-target="#connexion" data-toggle="modal"><span class="links">Connexion</span></a>
@@ -44,19 +68,19 @@
             <a href="#" class="nav-link bg-primary" style="color: white" data-target="#registration" data-toggle="modal"><span class="links">S'inscrire</span></a>
         </p>
     {% elseif app.user %}
-        <p align="center" class="mt-3">
-            <a class="nav-link bg-primary refresh" style="color: white" role="button"  href="{{ path('security_role') }}"><span>Compte</span></a>
-        </p>
         <p align="center">
             <a class="nav-link bg-primary refresh" style="color: white" role="button" href="{{ path('security_logout') }}"><span>Déconnexion</span></a>
         </p>
     {% endif %}
 </div>
+
+
+<!--  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   Effet assombrissant   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+
 <div id="backCan" onclick="toggleNav()"></div>
 
-<!-- Use any element to open the sidenav -->
+<!--  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   Tous le reste sauf le Off-canvas   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
 
-<!-- Add all page content inside this div if you want the side nav to push page content to the right (not used if you only want the sidenav to sit on top of the page -->
 <div id="main">
     <div class="text-center">
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -79,66 +103,73 @@
             </div>
         </nav>
     </div>
+
     {% block body %}{% endblock %}
 </div>
 
+{% if not app.user %}
+    <!--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Modal Connexion !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
 
-<!--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Modal Connexion !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
+    <div class="modal fade" id="connexion" tabindex="-1" role="dialog" aria-labelledby="connexion" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content familiNav">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="connexion">Inscription</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
 
-<div class="modal fade" id="connexion" tabindex="-1" role="dialog" aria-labelledby="connexion" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content familiNav">
-            <div class="modal-header">
-                <h5 class="modal-title" id="connexion">Inscription</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-
-                <form action="{{ path('security_login') }}" method="post">
-                    <div class="form-group">
-                        <input type="text" id="pseudo" placeholder="Pseudo" required name="_username" value="{{ last_username }}"
-                               class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <input type="password" id="mdp" placeholder="Mot de passe" required name="_password" class="form-control">
-                    </div>
-                    <div class="container">
-                        <div class="modal-footer row justify-content-between">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-                            <button type="submit" class="btn btn-primary refresh">Link start !</button>
+                    <form action="{{ path('security_login') }}" method="post">
+                        <div class="form-group">
+                            <input type="text" id="pseudo" placeholder="Pseudo" required name="_username" value="{{ last_username }}"
+                                   class="form-control">
                         </div>
-                    </div>
-                </form>
+                        <div class="form-group">
+                            <input type="password" id="mdp" placeholder="Mot de passe" required name="_password" class="form-control">
+                        </div>
+                        <div class="container">
+                            <div class="modal-footer row justify-content-between">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                                <button type="submit" class="btn btn-primary">Link start !</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<!--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Modal registration !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
+    <!--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Modal registration !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
 
-<div class="modal fade" id="registration" tabindex="-1" role="dialog" aria-labelledby="registration" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content familiNav">
-            <div class="modal-header">
-                <h5 class="modal-title" id="registration">Inscription</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+    <div class="modal fade" id="registration" tabindex="-1" role="dialog" aria-labelledby="registration" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content familiNav">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="registration">Inscription</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body registration_body">
+                </div>
             </div>
-            <div class="modal-body registration_body">
+        </div>
+        <div class="row">
+            <div class="alert alert-dismissible alert-success badFlash col-8 offset-2 mb-5" style="position: absolute" id="goodFlash" align="center">
+                <strong id="name">p</strong>
             </div>
         </div>
     </div>
-</div>
+{% endif %}
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.2.2/jquery.form.min.js" integrity="sha384-FzT3vTVGXqf7wRfy8k4BiyzvbNfeYjK+frTVqZeNDFl8woCbF0CYG6g2fMEFFo/i" crossorigin="anonymous"></script>
-<script src="../assets/js/js.js"></script>
+<script src="/assets/js/js.js"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.2.2/jquery.form.min.js"></script>
 <script>
@@ -156,21 +187,45 @@
             // il est impératif de commencer avec cette méthode qui va empêcher le navigateur d'envoyer le formulaire lui-même
             e.preventDefault();
 
-            $form = $(e.target);
-            modal = $('#registration');
+            let form = $(e.target);
+            let modal = $('#registration');
+            let name = innerHTML = 'Bonjour ' + '<strong>' + $('#userName').val() + '<strong>' + ' =) Votre inscription est validée !';
 
-            let $submitButton = $form.find(':submit');
+            let $submitButton = form.find(':submit');
             $submitButton.html('<i class="fas fa-spinner fa-pulse"></i>');
             $submitButton.prop('disabled', true);
 
             // ajaxSubmit du plugin ajaxForm nécessaire pour l'upload de fichier
-            $form.ajaxSubmit({
+            form.ajaxSubmit({
                 type: 'post',
                 success: function (data) {
                     if (data === 'success') {
-                        modal.modal('hide');
+                        window.setTimeout(function () {
+                            modal.modal('hide');
+                        }, 4500);
+
+//   !!!!!!!!!!!!!!!!!!!   Changement de l'opacity du flash avec deux effet en setTimeout   !!!!!!!!!!!!!!!!!!!!!!!
+
+                        (document.querySelector('#name')).innerHTML = name;
+                        window.setTimeout(function () {
+                            $('#goodFlash').toggleClass('badFlash').toggleClass('goodFlash').removeClass('alert-warning').addClass('alert-success');
+                            window.setTimeout(function () {
+                                $('#goodFlash').toggleClass('goodFlash').toggleClass('goodFlash2');
+                                window.setTimeout(function () {
+                                    $('#goodFlash').toggleClass('goodFlash2').toggleClass('badFlash2');
+                                    $submitButton.html('Yeah Boy');
+                                    window.setTimeout(function () {
+                                        $('#goodFlash').toggleClass('badFlash2').toggleClass('badFlash');
+                                        window.setTimeout(function () {
+                                            $submitButton.html('Valider');
+                                            $submitButton.prop('disabled', false);
+                                        }, 800);
+                                    }, 500);
+                                }, 3000);
+                            }, 500);
+                        });
+
                     } else {
-                        console.log(data);
                         modal.find('.modal-body.registration_body').html(data);
                     }
                 }
@@ -223,6 +278,9 @@
 </script>
 
 <script>
+
+    //   !!!!!!!!!!!!!!!!!!!   Changement de l'opacity du body lors du chargement d'un lien en setTimeout   !!!!!!!!!!!
+
     $(document).ready(function () {
         window.setTimeout(function () {
             $('body').css('opacity', '1');
@@ -234,9 +292,48 @@
             $('body').css('opacity', '0');
             window.setTimeout(function () {
                 window.location.href = ref;
-            }, 1000)
+            }, 500)
         })
     })
+</script>
+<script>
+
+    //   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   DataTable traduction et activation + css   !!!!!!!!!!!!!!!!!!!!!!!
+
+    $(document).ready( function () {
+        $('#dataTable').DataTable( {
+            language: {
+                processing:     "Traitement en cours...",
+                search:         '',
+                searchPlaceholder: 'Rechercher',
+                lengthMenu:    "Afficher _MENU_ &eacute;l&eacute;ments",
+                info:           "Affichage de l'&eacute;lement _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
+                infoEmpty:      "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
+                infoFiltered:   "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+                infoPostFix:    "",
+                loadingRecords: "Chargement en cours...",
+                zeroRecords:    "Aucun &eacute;l&eacute;ment &agrave; afficher",
+                emptyTable:     "Aucune donnée disponible dans le tableau",
+                paginate: {
+                    first:      "Premier",
+                    previous:   "Pr&eacute;c&eacute;dent",
+                    next:       "Suivant",
+                    last:       "Dernier"
+                },
+                aria: {
+                    sortAscending:  ": activer pour trier la colonne par ordre croissant",
+                    sortDescending: ": activer pour trier la colonne par ordre décroissant"
+                }
+            }})
+    } );
+
+    $(document).ready(function () {
+        $('.dataTables_filter').addClass('d-flex justify-content-end');
+        $('#dataTable_wrapper label, .dataTables_info').css({'font-family' : 'Lobster, cursive', 'font-size' : '20px'});
+        $('#dataTable_wrapper .dataTables_length label').addClass('col-12');
+        $('#dataTable_wrapper .dataTables_length label select').addClass('col-2');
+        $('#dataTable_wrapper input').css({'text-align' : 'center'});
+    });
 </script>
 {% block javascripts %}{% endblock %}
 </body>

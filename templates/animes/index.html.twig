@@ -4,16 +4,8 @@
 
 {% block body %}
     <div class="container-fluid">
-        {% for message in app.flashes('deleteAnime') %}
-            <div class="row">
-                <div class="alert alert-dismissible alert-success badFlash col-8 offset-2 mb-5" id="goodFlash" align="center">
-                    <strong id="name">{{ message }}</strong>
-                </div>
-            </div>
-            </div>
-        {% endfor %}
         <h1 class="text-center mt-3 mb-3">Liste des animés</h1>
-        <table class="table table-hover text-center" id="dataTable">
+        <table class="table table-hover table-striped text-center" id="dataTable">
             <thead>
             <tr>
                 <th scope="col"></th>
@@ -50,44 +42,5 @@
             </tbody>
         </table>
     </div>
-{% endblock %}
-
-{% block javascripts %}
-    <script>
-        $(document).ready( function () {
-            $('#dataTable').DataTable( {
-                language: {
-                    processing:     "Traitement en cours...",
-                    search:         '',
-                    searchPlaceholder: 'Rechercher',
-                    lengthMenu:    "Afficher _MENU_ &eacute;l&eacute;ments",
-                    info:           "Affichage de l'&eacute;lement _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
-                    infoEmpty:      "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
-                    infoFiltered:   "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
-                    infoPostFix:    "",
-                    loadingRecords: "Chargement en cours...",
-                    zeroRecords:    "Aucun &eacute;l&eacute;ment &agrave; afficher",
-                    emptyTable:     "Aucune donnée disponible dans le tableau",
-                    paginate: {
-                        first:      "Premier",
-                        previous:   "Pr&eacute;c&eacute;dent",
-                        next:       "Suivant",
-                        last:       "Dernier"
-                    },
-                    aria: {
-                        sortAscending:  ": activer pour trier la colonne par ordre croissant",
-                        sortDescending: ": activer pour trier la colonne par ordre décroissant"
-                    }
-                }})
-        } );
-
-        $(document).ready(function () {
-            $('.dataTables_filter').addClass('d-flex justify-content-end');
-            $('#dataTable_wrapper label, .dataTables_info').css({'font-family' : 'Lobster, cursive', 'font-size' : '20px'});
-            $('#dataTable_wrapper .dataTables_length label').addClass('col-12');
-            $('#dataTable_wrapper .dataTables_length label select').addClass('col-2');
-            $('#dataTable_wrapper input').css({'text-align' : 'center'});
-        });
-    </script>
 {% endblock %}
 
