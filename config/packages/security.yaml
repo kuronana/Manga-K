@@ -21,8 +21,9 @@ security:
             provider: in_database
 
             form_login:
+                login_path: referer_page
                 check_path: security_login
-                default_target_path: referer_page
+                use_referer: true
 
             logout:
                 path: security_logout

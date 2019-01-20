@@ -4,93 +4,148 @@
 
 {% block body %}
 
-    <div class="container mt-5">
+    <div class="container-fluid mt-5">
         <div class="row">
-            <div class="alert alert-dismissible alert-success badFlash col-8 offset-2 mb-5" id="goodFlash" align="center">
+            <div class="alert alert-dismissible alert-success badFlash col-8 offset-2 mb-3" id="goodFlash" align="center">
                 <strong id="name">p</strong>
             </div>
         </div>
         <div class="row mb-5">
-            <div class="col-10 offset-1" align="center">
-                <div class="card text-white bg-secondary mb-3 account">
-                    <h2 class="card-header bg-primary accountHead" style="color: white">Mon compte</h2>
-                    <div class="card-body"  style="color: white">
-                        <div class="row justify-content-center">
-                            <div class="col-5">
-                                <div class="jumbotron">
-                                    <h4 class="card-title">Pseudo</h4>
-                                    <div>{{ admin.username }}</div>
-                                </div>
+            <div class="col-3 offset-1">
+                <div class="card p-0">
+                    <h2 class="card-header bg-primary text-center">Mon compte</h2>
+                    <div class="card-body" align="center">
+                        <h5 class="card-title">{{ admin.username }}</h5>
+                        <h6 class="card-subtitle text-muted pb-3">{% if is_granted('ROLE_SUPER_ADMIN') %}Super Admin{% else %}Administrateur{% endif %}</h6>
+                        <img class="card-img-top" src="/assets/images/upload/{{ admin.picture }}" style="width: 10rem" alt="Card image cap">
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><strong class="text-primary">E-mail : </strong> {{ admin.mail }}</li>
+                    </ul>
+                    <div class="card-footer text-muted">
+                        I've got a power !
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 offset-1">
+                <div class="jumbotron pt-4">
+                    <h3 class="text-center">Paramètre de compte</h3>
+                    <hr class="my-4">
+                    <div class="accordion" id="accordionExample">
+                        <div class="card">
+                            <div class="card-header text-center bg-primary" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne" id="headingOne">
+                                <h5 class="mb-0">
+                                    Editer votre profil
+                                </h5>
                             </div>
-                            <div class="col-5">
-                                <div class="jumbotron">
-                                    <h4 class="card-title">E-Mail</h4>
-                                    <div>{{ admin.mail }}</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            {% if app.user.roles[0] == 'ROLE_ADMIN' %}
-                                <button type="button" class="btn btn-outline-danger btn-lg h col-3" id="buttonSwitch" data-target="#switchInf" data-toggle="modal">Se rétrograder au rang d'utilisateur</button>
-                            {% elseif app.user.roles[0] == 'ROLE_SUPER_ADMIN' %}
-                                <button type="button" class="btn btn-outline-danger btn-lg h col-4" id="buttonSwitch" data-target="#switchSup" data-toggle="modal">Se rétrograder au rang d'administrateur</button>
-                            {% endif %}
-                        </div>
-                        <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!   Modal de switch role   !!!!!!!!!!!!!!!!!!!!!!!!! -->
-
-                        <div class="modal fade" id="switchInf" tabindex="-1" role="dialog" aria-labelledby="del" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="text-primary">Rétrogradation au rang d'utilisateur</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
+                            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+                                <div class="card-body" align="center">
+                                    <div class="col-5">
+                                        {{ form_start(formAvatar) }}
+                                        {{ form_row(formAvatar.picture) }}
+                                        <button type="submit" class="btn btn-primary h">Changer d'avatar</button>
+                                        {{ form_end(formAvatar) }}
                                     </div>
-                                    <div class="modal-body">
-                                        <p>Êtes vous certain de vouloir vous défaire du rang d'administrateur et de passer en utilisateur ?</p>
-                                        <p>Vous n'aurais plus accès aux priviléges qu'apporte le status d'administrateur !</p>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <form action="{{ path('switch_role', { 'id' : admin.id}) }}">
-                                            <button type="submit" class="btn btn-primary" id="switchUser">Confirmer</button>
-                                        </form>
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-                                    </div>
-                                    <small class="text-primary">Vous serez déconnecter afin de valider le changement de status.</small>
                                 </div>
                             </div>
                         </div>
-                        <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!   Modal de switch role Super_Admin   !!!!!!!!!!!!!!!!!!!!!!!!! -->
-
-                        <div class="modal fade" id="switchSup" tabindex="-1" role="dialog" aria-labelledby="del" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="text-primary">Rétrogradation au rang d'administrateur</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
+                        <div class="card">
+                            <div class="card-header text-center bg-primary" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" id="headingTwo">
+                                <h5 class="mb-0">
+                                    Editer votre mot de passe
+                                </h5>
+                            </div>
+                            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                                <div class="card-body" align="center">
+                                    {{ form_start(formPassword) }}
+                                    <div class="row justify-content-center text-primary">
+                                        <div class="col-6">
+                                            {{ form_row(formPassword.old_password) }}
+                                            {{ form_row(formPassword.password) }}
+                                            {{ form_row(formPassword.confirm_password) }}
+                                            <button type="submit" class="btn btn-primary h">Changer le mot de passe</button>
+                                        </div>
                                     </div>
-                                    <div class="modal-body">
-                                        <p>Êtes vous certain de vouloir vous défaire du rang de Super Admin et de repasser en administrateur ?</p>
-                                        <p>Vous n'aurais plus les pleins pouvoirs !</p>
+                                    {{ form_end(formPassword) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header text-center bg-primary" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree" id="headingThree">
+                                <h5 class="mb-0">
+                                    Editer votre Status
+                                </h5>
+                            </div>
+                            <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                                <div class="card-body">
+                                    <div class="row justify-content-center">
+                                        {% if app.user.roles[0] == 'ROLE_ADMIN' %}
+                                            <button type="button" class="btn btn-outline-danger btn-lg h col-3" id="buttonSwitch" data-target="#switchInf" data-toggle="modal">Se rétrograder au rang d'utilisateur</button>
+                                        {% elseif app.user.roles[0] == 'ROLE_SUPER_ADMIN' %}
+                                            <button type="button" class="btn btn-outline-danger btn-lg h col-4" id="buttonSwitch" data-target="#switchSup" data-toggle="modal">Se rétrograder au rang d'administrateur</button>
+                                        {% endif %}
                                     </div>
-                                    <div class="modal-footer">
-                                        <form action="{{ path('switch_role_sup', { 'id' : admin.id}) }}">
-                                            <button type="submit" class="btn btn-primary" id="switchAdm">Confirmer</button>
-                                        </form>
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-                                    </div>
-                                    <small class="text-primary">Vous serez déconnecter afin de valider le changement de status.</small>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <div class=" row mb-4">
+                    <button type="button" class="btn btn-primary btn-lg h col-4 offset-4" onclick="location.href = '{{ path('admin_list') }}'">Retour</button>
+                </div>
+            </div>
+        </div>
 
-                <div class="mt-5">
-                    <button type="button" class="btn btn-primary btn-lg h col-3" onclick="location.href = '{{ path('admin_list') }}'">Retour</button>
+        <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!   Modal de switch role   !!!!!!!!!!!!!!!!!!!!!!!!! -->
+
+        <div class="modal fade" id="switchInf" tabindex="-1" role="dialog" aria-labelledby="del" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="text-primary">Rétrogradation au rang d'utilisateur</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Êtes vous certain de vouloir vous défaire du rang d'administrateur et de passer en utilisateur ?</p>
+                        <p>Vous n'aurais plus accès aux priviléges qu'apporte le status d'administrateur !</p>
+                    </div>
+                    <div class="modal-footer">
+                        <form action="{{ path('switch_role', { 'id' : admin.id}) }}">
+                            <button type="submit" class="btn btn-primary" id="avatar">Confirmer</button>
+                        </form>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                    </div>
+                    <small class="text-primary text-center">Vous serez déconnecter afin de valider le changement de status.</small>
+                </div>
+            </div>
+        </div>
+        <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!   Modal de switch role Super_Admin   !!!!!!!!!!!!!!!!!!!!!!!!! -->
+
+        <div class="modal fade" id="switchSup" tabindex="-1" role="dialog" aria-labelledby="del" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="text-primary">Rétrogradation au rang d'administrateur</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Êtes vous certain de vouloir vous défaire du rang de Super Admin et de repasser en administrateur ?</p>
+                        <p>Vous n'aurais plus les pleins pouvoirs !</p>
+                    </div>
+                    <div class="modal-footer">
+                        <form action="{{ path('switch_role_sup', { 'id' : admin.id}) }}">
+                            <button type="submit" class="btn btn-primary" id="switchAdm">Confirmer</button>
+                        </form>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                    </div>
+                    <small class="text-primary text-center">Vous serez déconnecter afin de valider le changement de status.</small>
                 </div>
             </div>
         </div>
@@ -105,6 +160,8 @@
 // ! il est impératif de commencer avec cette méthode qui va empêcher le navigateur d'envoyer le formulaire lui-même !
             e.preventDefault();
             let role = 'Vous vous êtes rétrogradé !';
+            let new_password = 'Mot de passe modifié avec succès !';
+            let new_avatar = 'Avatar modifié avec succès !';
 
             $form = $(e.target);
             let modalR = $('#switchInf');
@@ -143,6 +200,54 @@
                                         window.setTimeout(function () {
                                             window.location.href = '{{ path('security_logout') }}'
                                         }, 500);
+                                    }, 500);
+                                }, 3000);
+                            }, 500);
+                        });
+
+                    }
+
+                    if(data === 'new_password') {
+                        (document.querySelector('#name')).innerHTML = new_password;
+
+                        let buttonSwitch = $('#buttonSwitch');
+                        buttonSwitch.html('<i class="fas fa-spinner fa-pulse"></i>');
+                        buttonSwitch.prop('disabled', true);
+
+                        window.setTimeout(function () {
+                            $('#goodFlash').toggleClass('badFlash').toggleClass('goodFlash').removeClass('alert-danger').addClass('alert-success');
+                            window.setTimeout(function () {
+                                $('#goodFlash').toggleClass('goodFlash').toggleClass('goodFlash2');
+                                window.setTimeout(function () {
+                                    $('#goodFlash').toggleClass('goodFlash2').toggleClass('badFlash2');
+                                    $submitButton.html('Ok Boy');
+                                    buttonSwitch.html('Ok Boy');
+                                    window.setTimeout(function () {
+                                        $('#goodFlash').toggleClass('badFlash2').toggleClass('badFlash');
+                                    }, 500);
+                                }, 3000);
+                            }, 500);
+                        });
+
+                    }
+
+                    if(data === 'new_avatar') {
+                        (document.querySelector('#name')).innerHTML = new_password;
+
+                        let buttonSwitch = $('#buttonSwitch');
+                        buttonSwitch.html('<i class="fas fa-spinner fa-pulse"></i>');
+                        buttonSwitch.prop('disabled', true);
+
+                        window.setTimeout(function () {
+                            $('#goodFlash').toggleClass('badFlash').toggleClass('goodFlash').removeClass('alert-danger').addClass('alert-success');
+                            window.setTimeout(function () {
+                                $('#goodFlash').toggleClass('goodFlash').toggleClass('goodFlash2');
+                                window.setTimeout(function () {
+                                    $('#goodFlash').toggleClass('goodFlash2').toggleClass('badFlash2');
+                                    $submitButton.html('Easy Boy');
+                                    buttonSwitch.html('Easy Boy');
+                                    window.setTimeout(function () {
+                                        $('#goodFlash').toggleClass('badFlash2').toggleClass('badFlash');
                                     }, 500);
                                 }, 3000);
                             }, 500);

@@ -4,15 +4,19 @@ namespace App\Controller;
 
 use App\Entity\Animes;
 use App\Entity\Type;
+use App\Form\AccountSettingAvatarType;
+use App\Form\AccountSettingPasswordType;
 use App\Form\AnimeType;
 use App\Repository\AnimesRepository;
 use App\Repository\UserRepository;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
  * @Route("/admin")
@@ -39,14 +43,58 @@ class AdminController extends AbstractController
 
     /**
      * @Route("/account", name="my_admin_account")
+     * @param Request $request
+     * @param UserPasswordEncoderInterface $encoder
      * @return Response
      */
-    public function account()
+    public function account(Request $request,
+                            UserPasswordEncoderInterface $encoder)
     {
         $admin = $this->getUser();
 
+        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!   Formulaire mdp   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+        $formPassword = $this->createForm(AccountSettingPasswordType::class);
+        $formPassword->handleRequest($request);
+
+        if ($formPassword->isSubmitted() && $formPassword->isValid()) {
+            if ($encoder->isPasswordValid($this->getUser(), $formPassword->get('old_password')->getData())) {
+                $this->getUser()->setPassword($encoder->encodePassword($this->getUser(), $formPassword
+                    ->get('password')->getData()));
+                $this->om->flush();
+
+                return new Response('new_password');
+            }
+        }
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!   Formulaire Avatar   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+        $formAvatar = $this->createForm(AccountSettingAvatarType::class);
+        $formAvatar->handleRequest($request);
+
+        if ($formAvatar->isSubmitted() && $formAvatar->isValid()) {
+            $file = $admin->getPicture();
+
+            $fileName = md5(uniqid()).'.'.$file->guessExtension();
+
+
+            try {
+                $file->move(
+                    $this->getParameter('images_directory'),
+                    $fileName
+                );
+            } catch (FileException $e) {
+            }
+
+            $admin->setPicture($fileName);
+            $this->om->flush();
+
+            return new Response('new_avatar');
+        }
+
         return $this->render('security/admin/account.html.twig', [
-            'admin' => $admin
+            'admin' => $admin,
+            'formPassword' => $formPassword->createView(),
+            'formAvatar' => $formAvatar->createView()
         ]);
     }
 

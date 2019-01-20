@@ -49,6 +49,12 @@ class User implements UserInterface
      */
     private $roles;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\Image()
+     */
+    private $picture;
+
     public function getSalt()
     {
         // TODO: Implement getSalt() method.
@@ -108,6 +114,18 @@ class User implements UserInterface
     public function setRoles($roles): self
     {
         $this->roles = $roles;
+
+        return $this;
+    }
+
+    public function getPicture()
+    {
+        return $this->picture;
+    }
+
+    public function setPicture($picture)
+    {
+        $this->picture = $picture;
 
         return $this;
     }

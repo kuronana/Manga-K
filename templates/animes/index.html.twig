@@ -3,6 +3,11 @@
 {% block title %}Animes - Manga-K{% endblock %}
 
 {% block body %}
+
+    {% if error %}
+        <div class="alert alert-danger mt-3 text-center">{{ error.messageKey | trans(error.messageData, 'security') }}</div>
+    {% endif %}
+
     <div class="container-fluid">
         <h1 class="text-center mt-3 mb-3">Liste des animés</h1>
         <table class="table table-hover table-striped text-center" id="dataTable">

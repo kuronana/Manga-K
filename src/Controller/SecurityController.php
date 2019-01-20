@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationType;
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -48,7 +49,12 @@ class SecurityController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()){
             $hash = $encoder->encodePassword( $user, $user->getPassword());
             $user->setPassword($hash);
-            $user->setRoles('ROLE_USER');
+            $users = $this->getDoctrine()->getRepository(UserRepository::class)->findAll();
+            if ($users) {
+                $user->setRoles('ROLE_USER');
+            } else {
+                $user->setRoles('ROLE_ADMIN');
+            }
 
             $manager = $this->getDoctrine()->getManager();
             $manager->persist($user);
@@ -79,7 +85,7 @@ class SecurityController extends AbstractController
      * @Route("/referer", name="referer_page")
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function referer()
+    public function referer(AuthenticationUtils $utils)
     {
         return $this->redirect($_SERVER['HTTP_REFERER']);
     }
@@ -87,8 +93,12 @@ class SecurityController extends AbstractController
     /**
      * @Route("/login", name="security_login")
      */
-    public function login()
+    public function login(AuthenticationUtils $utils)
     {
+        return $this->redirectToRoute('security_home', [
+            'last_username' => $utils->getLastUsername(),
+            'error' => $utils->getLastAuthenticationError()
+        ]);
     }
 
     /**
