@@ -11,6 +11,7 @@ use App\Repository\AnimesRepository;
 use App\Repository\UserRepository;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -39,7 +40,10 @@ class AdminController extends AbstractController
         $this->userRepository = $userRepository;
     }
 
-    //   !!!!!!!!!!!!!!!!!!!!!!!!!!   Partie Comptes   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+      ///////////////////////////////////////////////////////////////////////////////////////////
+     ///////////////////////////////   Partir Compte   /////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////
 
     /**
      * @Route("/account", name="my_admin_account")
@@ -51,8 +55,12 @@ class AdminController extends AbstractController
                             UserPasswordEncoderInterface $encoder)
     {
         $admin = $this->getUser();
+        $oldAvatar = $admin->getPicture();
 
-        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!   Formulaire mdp   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+          ///////////////////////////////////////////////////////////////////////////////////////////
+         //////////////////////////////   Formulaire MDP   /////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////
 
         $formPassword = $this->createForm(AccountSettingPasswordType::class);
         $formPassword->handleRequest($request);
@@ -66,13 +74,25 @@ class AdminController extends AbstractController
                 return new Response('new_password');
             }
         }
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!   Formulaire Avatar   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+          ///////////////////////////////////////////////////////////////////////////////////////////
+         ///////////////////////////   Formulaire Avatar   /////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////
 
         $formAvatar = $this->createForm(AccountSettingAvatarType::class);
         $formAvatar->handleRequest($request);
 
         if ($formAvatar->isSubmitted() && $formAvatar->isValid()) {
-            $file = $admin->getPicture();
+            $file = $formAvatar->get('file')->getData();
+
+            ///////////////////////////////////////////////////////////////
+            // Supression de l'ancienne image après ajout de la nouvelle //
+            ///////////////////////////////////////////////////////////////
+
+            if ($oldAvatar != "man.png") {
+                $fileSystem = new Filesystem();
+                $fileSystem->remove($this->getParameter('images_directory').'/'.$oldAvatar);
+            }
 
             $fileName = md5(uniqid()).'.'.$file->guessExtension();
 
@@ -88,7 +108,7 @@ class AdminController extends AbstractController
             $admin->setPicture($fileName);
             $this->om->flush();
 
-            return new Response('new_avatar');
+            return new Response('change_avatar');
         }
 
         return $this->render('security/admin/account.html.twig', [

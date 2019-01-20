@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -123,7 +124,7 @@ class User implements UserInterface
         return $this->picture;
     }
 
-    public function setPicture($picture)
+    public function setPicture($picture): self
     {
         $this->picture = $picture;
 

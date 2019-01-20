@@ -13,8 +13,9 @@ class AccountSettingAvatarType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('picture', FileType::class, [
-                'label' => 'Choisir une image'
+            ->add('file', FileType::class, [
+                'mapped' => false,
+                'label' => 'Choisissez une image'
             ]);
     }
 

@@ -38,7 +38,8 @@ class SecurityController extends AbstractController
      * @return Response
      */
     public function registration(Request $request,
-                                 UserPasswordEncoderInterface $encoder)
+                                 UserPasswordEncoderInterface $encoder,
+                                 UserRepository $userRepository)
     {
         $user = new User();
         $form = $this->createForm(RegistrationType::class, $user, [
@@ -49,11 +50,12 @@ class SecurityController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()){
             $hash = $encoder->encodePassword( $user, $user->getPassword());
             $user->setPassword($hash);
-            $users = $this->getDoctrine()->getRepository(UserRepository::class)->findAll();
-            if ($users) {
+            $user->setPicture('man.png');
+
+            if ($userRepository->findAll()) {
                 $user->setRoles('ROLE_USER');
             } else {
-                $user->setRoles('ROLE_ADMIN');
+                $user->setRoles('ROLE_SUPER_ADMIN');
             }
 
             $manager = $this->getDoctrine()->getManager();

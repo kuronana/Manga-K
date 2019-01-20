@@ -45,7 +45,7 @@
                                 <div class="card-body" align="center">
                                     <div class="col-5">
                                         {{ form_start(formAvatar) }}
-                                        {{ form_row(formAvatar.picture) }}
+                                        {{ form_row(formAvatar.file) }}
                                         <button type="submit" class="btn btn-primary h">Changer d'avatar</button>
                                         {{ form_end(formAvatar) }}
                                     </div>
@@ -231,8 +231,8 @@
 
                     }
 
-                    if(data === 'new_avatar') {
-                        (document.querySelector('#name')).innerHTML = new_password;
+                    if(data === 'change_avatar') {
+                        (document.querySelector('#name')).innerHTML = new_avatar;
 
                         let buttonSwitch = $('#buttonSwitch');
                         buttonSwitch.html('<i class="fas fa-spinner fa-pulse"></i>');
@@ -248,11 +248,14 @@
                                     buttonSwitch.html('Easy Boy');
                                     window.setTimeout(function () {
                                         $('#goodFlash').toggleClass('badFlash2').toggleClass('badFlash');
+//   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   Redirection vers la liste d'user quand on switchRole   !!!!!!!!!!!!!!!!!!!
+                                        window.setTimeout(function () {
+                                            window.location.href = '{{ path('my_admin_account') }}'
+                                        }, 500);
                                     }, 500);
                                 }, 3000);
                             }, 500);
                         });
-
                     }
                 }
             });

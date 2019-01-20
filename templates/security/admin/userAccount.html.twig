@@ -4,6 +4,7 @@
 
 {% block body %}
 
+    {% if user %}
     <div class="container mt-5">
         <div class="row">
             <div class="alert alert-dismissible alert-success badFlash col-8 offset-2 mb-5" id="goodFlash" align="center">
@@ -36,60 +37,62 @@
                         </div>
                         <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!   Modal de suppression !!!!!!!!!!!!!!!!!!!!!!!!! -->
 
-                        <div class="modal fade" id="del" tabindex="-1" role="dialog" aria-labelledby="del" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="text-center pl-5 ml-5">Suppression du compte de {{ user.username }}</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <p>Êtes vous certain de vouloir supprimer cet utilisateur ?</p>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <form action="{{ path('user_delete', { 'id' : user.id}) }}">
-                                            <button type="submit" class="btn btn-danger" id="deleteUser">Confirmer</button>
-                                        </form>
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                            <div class="modal fade" id="del" tabindex="-1" role="dialog" aria-labelledby="del" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="">Suppression du compte de {{ user.username }}</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Êtes vous certain de vouloir supprimer cet utilisateur ?</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <form action="{{ path('user_delete', { 'id' : user.id}) }}">
+                                                <button type="submit" class="btn btn-danger" id="deleteUser">Confirmer</button>
+                                            </form>
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!   Modal de switch role   !!!!!!!!!!!!!!!!!!!!!!!!! -->
+                            <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!   Modal de switch role   !!!!!!!!!!!!!!!!!!!!!!!!! -->
 
-                        <div class="modal fade" id="switch" tabindex="-1" role="dialog" aria-labelledby="del" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="text-center pl-5 ml-5">Promotion de {{ user.username }} au rang d'administrateur</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <p>Êtes vous certain de vouloir basculer cet utilisateur en administrateur ?</p>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <form action="{{ path('switch_role', { 'id' : user.id}) }}">
-                                            <button type="submit" class="btn btn-primary" id="switchUser">Confirmer</button>
-                                        </form>
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                            <div class="modal fade" id="switch" tabindex="-1" role="dialog" aria-labelledby="del" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="">Promotion de {{ user.username }} au rang d'administrateur</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Êtes vous certain de vouloir basculer cet utilisateur en administrateur ?</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <form action="{{ path('switch_role', { 'id' : user.id}) }}">
+                                                <button type="submit" class="btn btn-primary" id="switchUser">Confirmer</button>
+                                            </form>
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+{% endif %}
 {% endblock %}
 
 
 {% block javascripts %}
+    {% if user %}
     <script>
         $(document).submit(function(e){
 // ! il est impératif de commencer avec cette méthode qui va empêcher le navigateur d'envoyer le formulaire lui-même !
@@ -133,11 +136,13 @@
                                         window.setTimeout(function () {
                                             window.location.href = '{{ path('user_list') }}';
                                         }, 500);
-                                    }, 3000);
-                                }, 500);
-                            });
+                                    }, 500);
+                                }, 3000);
+                            }, 500);
                         })
-                    }else if(data === 'switch') {
+                    }
+
+                    if(data === 'switch') {
 
                         modalS.modal('hide');
                         (document.querySelector('#name')).innerHTML = role;
@@ -171,4 +176,5 @@
 
         });
     </script>
+    {% endif %}
 {% endblock %}

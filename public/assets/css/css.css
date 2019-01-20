@@ -4,6 +4,20 @@ body {
     transition: 0.5s ease;
 }
 
+/*
+ !!!!!!!!!!!!!  Texte input upload image   !!!!!!!!!!!!!!!
+ */
+.custom-file-input ~ .custom-file-label::before {
+    content: 'Selectionnez une image';
+}
+
+/*
+ !!!!!!!!!!!!!  boutton input upload image   !!!!!!!!!!!!!!!
+ */
+.custom-file-input ~ .custom-file-label::after {
+    content: none;
+}
+
 #carouselExampleFade {
     z-index: 0;
 }
