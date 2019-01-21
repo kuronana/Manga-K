@@ -262,4 +262,15 @@
 
         });
     </script>
+    <script>
+
+         //////////////////////////////////////////////////////
+        // Placement du nom de l'image uploadé dans l'input //
+       //////////////////////////////////////////////////////
+
+        $('.custom-file-input').on('change',function(){
+            var fileName = $(this).val().replace(/\\/g, '/').replace(/.*\//, '');
+            $(this).parent('.custom-file').find('.custom-file-label').text(fileName);
+        });
+    </script>
 {% endblock %}

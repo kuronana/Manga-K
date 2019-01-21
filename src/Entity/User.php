@@ -52,7 +52,10 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Assert\Image()
+     * @Assert\File(
+     *     mimeTypes = {"image/jpeg", "	image/png"},
+     *     mimeTypesMessage = "Seul les images sont acceptées"
+     * )
      */
     private $picture;
 

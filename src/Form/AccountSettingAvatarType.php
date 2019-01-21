@@ -15,7 +15,10 @@ class AccountSettingAvatarType extends AbstractType
         $builder
             ->add('file', FileType::class, [
                 'mapped' => false,
-                'label' => 'Choisissez une image'
+                'label' => 'Choisissez une image',
+                'attr' => [
+                    'accept' => 'image/*'
+                ]
             ]);
     }
 

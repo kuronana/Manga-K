@@ -30,19 +30,22 @@ class AdminController extends AbstractController
     private $om;
     private $animesRepository;
     private $userRepository;
+    private $filesystem;
 
     public function __construct(ObjectManager $manager,
                                 AnimesRepository $animesRepository,
-                                UserRepository $userRepository)
+                                UserRepository $userRepository,
+                                Filesystem $filesystem)
     {
         $this->om = $manager;
         $this->animesRepository = $animesRepository;
         $this->userRepository = $userRepository;
+        $this->filesystem = $filesystem;
     }
 
 
-      ///////////////////////////////////////////////////////////////////////////////////////////
-     ///////////////////////////////   Partir Compte   /////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////   Partir Compte   /////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////////////
 
     /**
@@ -58,8 +61,8 @@ class AdminController extends AbstractController
         $oldAvatar = $admin->getPicture();
 
 
-          ///////////////////////////////////////////////////////////////////////////////////////////
-         //////////////////////////////   Formulaire MDP   /////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////   Formulaire MDP   /////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////////////////////////////
 
         $formPassword = $this->createForm(AccountSettingPasswordType::class);
@@ -75,8 +78,8 @@ class AdminController extends AbstractController
             }
         }
 
-          ///////////////////////////////////////////////////////////////////////////////////////////
-         ///////////////////////////   Formulaire Avatar   /////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////   Formulaire Avatar   /////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////////////////////////////
 
         $formAvatar = $this->createForm(AccountSettingAvatarType::class);
@@ -85,17 +88,17 @@ class AdminController extends AbstractController
         if ($formAvatar->isSubmitted() && $formAvatar->isValid()) {
             $file = $formAvatar->get('file')->getData();
 
+
+            $fileName = md5(uniqid()) . '.' . $file->guessExtension();
+
             ///////////////////////////////////////////////////////////////
             // Supression de l'ancienne image après ajout de la nouvelle //
             ///////////////////////////////////////////////////////////////
 
             if ($oldAvatar != "man.png") {
-                $fileSystem = new Filesystem();
-                $fileSystem->remove($this->getParameter('images_directory').'/'.$oldAvatar);
+
+                $this->filesystem->remove($this->getParameter('images_directory') . '/' . $oldAvatar);
             }
-
-            $fileName = md5(uniqid()).'.'.$file->guessExtension();
-
 
             try {
                 $file->move(
@@ -251,6 +254,8 @@ class AdminController extends AbstractController
             $this->om->persist($anime);
             $this->om->flush();
 
+            $this->filesystem->mkdir('assets/video/upload/anime/'.$anime->getName());
+
             return new Response('success');
         }
         return $this->render('security/admin/newAnime.html.twig', [
@@ -266,11 +271,47 @@ class AdminController extends AbstractController
      * @return Response
      */
     public function updateAnime(Request $request,
-                           $id)
+                                $id)
     {
         $anime = $this->animesRepository->findOneBy([
             'id' => $id
         ]);
+
+        /////////////////////////////////////////////////////////////////
+        // Tableau contenant toutes les saisons et épisodes de l'animé //
+        /////////////////////////////////////////////////////////////////
+
+        $tab = [];
+        $seasons = [];
+        $issetSeasons = [];
+        $emptySeasons = [];
+        $dirs = scandir('assets/video/upload/anime/'.$anime->getName());
+
+        foreach ($dirs as $dir ) {
+            if (!in_array($dir, ['.', '..'])) {
+                $files = scandir('assets/video/upload/anime/'.$anime->getName().'/'.$dir);
+
+
+                foreach ($files as $file ) {
+                    if (!in_array($file, ['.', '..'])) {
+                        $tab[$dir][] = $file;
+                        $issetSeasons[] = $dir;
+                    }
+                }
+                $seasons[] = $dir;
+            }
+        }
+
+        /////////////////////////////////
+        // recherche les saisons vides //
+        /////////////////////////////////
+        foreach ($seasons as $season ) {
+            if (!in_array($season, $issetSeasons)) {
+                $emptySeasons[] = $season;
+            }
+        }
+        ///////////////////////////////////////////////////////////
+
         $formUpdateAnime = $this->createForm(AnimeType::class, $anime);
         $formUpdateAnime->handleRequest($request);
 
@@ -283,7 +324,9 @@ class AdminController extends AbstractController
 
         return $this->render('security/admin/updateAnime.html.twig', [
             'formUpdateAnime' => $formUpdateAnime->createView(),
-            'anime' => $anime
+            'anime' => $anime,
+            'tab' => $tab,
+            'emptySeasons' => $emptySeasons
         ]);
     }
 
@@ -298,9 +341,62 @@ class AdminController extends AbstractController
         $anime = $this->animesRepository->findOneBy([
             'id' => $id
         ]);
-            $this->om->remove($anime);
-            $this->om->flush();
+        $this->filesystem->remove('assets/video/upload/anime/'.$anime->getName());
+        $this->om->remove($anime);
+        $this->om->flush();
 
-            return $this->redirectToRoute("animes");
+
+        return $this->redirectToRoute("animes");
+    }
+
+    /**
+     * @Route("/addSeason/{id}", name="add_season")
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function addSeason($id)
+    {
+        $filesystem = new Filesystem();
+        $anime = $this->animesRepository->findOneBy([
+            'id' => $id
+        ]);
+        $dirs = scandir('assets/video/upload/anime/'.$anime->getName());
+        $dir = [];
+        foreach ($dirs as $dos ) {
+            if (!in_array($dos, ['.', '..'])) {
+                $dir[] = $dos;
+            }
+        }
+
+        $count = count($dir)+1;
+        $filesystem->mkdir('assets/video/upload/anime/'.$anime->getName().'/Saison '.$count);
+
+        return $this->redirect($_SERVER['HTTP_REFERER']);
+
+    }
+
+    /**
+     * @Route("/remSeason/{id}", name="rem_season")
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function RemSeason($id)
+    {
+        $filesystem = new Filesystem();
+        $anime = $this->animesRepository->findOneBy([
+            'id' => $id
+        ]);
+        $dirs = scandir('assets/video/upload/anime/'.$anime->getName());
+        $dir = [];
+        foreach ($dirs as $dos ) {
+            if (!in_array($dos, ['.', '..'])) {
+                $dir[] = $dos;
+            }
+        }
+
+        $filesystem->remove('assets/video/upload/anime/'.$anime->getName().'/Saison '.count($dir));
+
+        return $this->redirect($_SERVER['HTTP_REFERER']);
+
     }
 }

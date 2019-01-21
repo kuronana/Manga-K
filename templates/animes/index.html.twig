@@ -37,7 +37,7 @@
                     </td>
                     <td class="align-middle">{{ anime.duration }} mn</td>
                     <td class="align-middle">
-                        {% if app.user and app.user.roles[0] == 'ROLE_ADMIN'%}
+                        {% if app.user and app.user.roles[0] == 'ROLE_ADMIN' or  app.user and app.user.roles[0] == 'ROLE_SUPER_ADMIN' %}
                             <button type="button" class="btn btn-warning" onclick="window.location.href= '{{ path('update_anime', { 'id' : anime.id}) }}'">Modifier</button>
                         {% endif %}
                         <button type="button" class="btn btn-primary mt-3">Regarder</button>
