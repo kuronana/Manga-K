@@ -70,24 +70,10 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/role", name="security_role")
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     */
-    public function role()
-    {
-        $role = $this->getUser()->getRoles();
-        if ($role == ['ROLE_USER']) {
-            return $this->redirectToRoute('user_account');
-        } elseif ($role == ['ROLE_ADMIN']) {
-            return $this->redirectToRoute('admin_account');
-        }
-    }
-
-    /**
      * @Route("/referer", name="referer_page")
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function referer(AuthenticationUtils $utils)
+    public function referer()
     {
         return $this->redirect($_SERVER['HTTP_REFERER']);
     }
