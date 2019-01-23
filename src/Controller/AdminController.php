@@ -292,7 +292,12 @@ class AdminController extends AbstractController
         $seasons = [];
         $issetSeasons = [];
         $emptySeasons = [];
-        $dirs = scandir('assets/video/upload/anime/'.$anime->getName());
+        if (!$this->filesystem->exists('assets/video/upload/anime/'.$anime->getName())) {
+            $this->filesystem->mkdir('assets/video/upload/anime/'.$anime->getName());
+        }
+        if (scandir('assets/video/upload/anime/'.$anime->getName())) {
+            $dirs = scandir('assets/video/upload/anime/'.$anime->getName());
+        }
 
         foreach ($dirs as $dir ) {
             if (!in_array($dir, ['.', '..'])) {

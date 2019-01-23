@@ -208,7 +208,7 @@
                                 }, 3000);
                             }, 500);
                         });
-                    } else {
+                    } else if (data === 'delete') {
                         modal.modal('hide');
                         (document.querySelector('#name')).innerHTML = remove;
                         let buttonDel = $('#buttonDel');
@@ -224,6 +224,7 @@
                                     buttonDel.html('Yeah Boy');
                                     window.setTimeout(function () {
                                         $('#goodFlash').toggleClass('badFlash2').toggleClass('badFlash');
+                                        window.location.href = '{{ path('animes') }}';
                                     }, 500);
                                 }, 3000);
                             }, 500);
