@@ -45,10 +45,16 @@ class Animes
      */
     private $image;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Episodes", mappedBy="anime", orphanRemoval=true)
+     */
+    private $episodes;
+
     public function __construct()
     {
         $this->typeLinks = new ArrayCollection();
         $this->type = new ArrayCollection();
+        $this->episodes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -126,6 +132,37 @@ class Animes
     public function setImage(string $image): self
     {
         $this->image = $image;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Episodes[]
+     */
+    public function getEpisodes(): Collection
+    {
+        return $this->episodes;
+    }
+
+    public function addEpisode(Episodes $episode): self
+    {
+        if (!$this->episodes->contains($episode)) {
+            $this->episodes[] = $episode;
+            $episode->setAnime($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEpisode(Episodes $episode): self
+    {
+        if ($this->episodes->contains($episode)) {
+            $this->episodes->removeElement($episode);
+            // set the owning side to null (unless already changed)
+            if ($episode->getAnime() === $this) {
+                $episode->setAnime(null);
+            }
+        }
 
         return $this;
     }

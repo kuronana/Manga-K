@@ -6,6 +6,7 @@
 parameters:
     locale: 'en'
     images_directory: '%kernel.project_dir%/public/assets/images/upload'
+    anime_directory: '%kernel.project_dir%/public/assets/video/upload/anime'
 
 services:
     # default configuration for services in *this* file

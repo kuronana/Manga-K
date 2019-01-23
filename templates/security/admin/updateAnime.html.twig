@@ -98,11 +98,18 @@
                     <h3 class="text-center">Saison(s) et épisode(s)</h3>
                     <hr class="my-2">
                     <div class="row justify-content-center">
-                        <button type="button" data-target="#delSeason" data-toggle="modal" class="btn btn-danger h col-3" >Supprimer une saison</button>
-                        <button type="button"  class="btn btn-primary h col-3 offset-1"  onclick="location.href ='{{ path('add_season', { 'id' : anime.id}) }}'">Ajouter une saison</button>
+                        <button type="button" data-target="#delSeason" data-toggle="modal" class="btn btn-danger h col-5" >Supprimer une saison</button>
+                        <button type="button"  class="btn btn-primary h col-5 offset-1"  onclick="location.href ='{{ path('add_season', { 'id' : anime.id}) }}'">Ajouter une saison</button>
                     </div>
                     <hr class="my-2">
-                    <div class="accordion col-10 offset-1" id="accordionSeason">
+                    <div class="accordion col-12" id="accordionSeason">
+                        <div class="col-12">
+                            {{ form_start(formEpisode) }}
+                            {{ form_row(formEpisode.episodes, {'id': 'epiName'}) }}
+                            {{ form_row(formEpisode.season) }}
+                            <button type="submit"  class="btn btn-primary h col-6">Ajouter un épisode</button>
+                            {{ form_end(formEpisode) }}
+                        </div>
                         {% for key, files in tab %}
                             <div class="card">
                                 <div class="card-header text-center bg-secondary" data-toggle="collapse" data-target="#collapse{{ loop.index0 }}" aria-expanded="false" aria-controls="collapse{{ loop.index0 }}">
@@ -112,9 +119,9 @@
                                 </div>
                                 <div id="collapse{{ loop.index0 }}" class="collapse" data-parent="#accordionSeason">
                                     <div class="card-body" align="center">
-                                        <div class="col-5">
+                                        <div class="col-6 mt-3">
                                             {% for file in files %}
-                                                <ul>{{ file }}</ul>
+                                                <p>{{ file }}</p>
                                             {% endfor %}
                                         </div>
                                     </div>
@@ -129,9 +136,20 @@
                                             {{ emptySeason }}<span class="badge badge-danger badge-pill ml-5">0</span>
                                         </h5>
                                     </div>
+                                    <div id="collapse{{ loop.index0 + tab | length }}" class="collapse" data-parent="#accordionSeason">
+                                        <div class="card-body" align="center">
+                                            <div class="col-6">
+                                                <ul></ul>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             {% endfor %}
                         {% endif %}
+                        <video width="100%" controls>>
+                            <source src="/assets/video/upload/anime/Driftershhhh/Saison 2/Episode 1.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
                     </div>
                 </div>
             </div>
@@ -144,26 +162,21 @@
         $(document).submit(function(e){
 // ! il est impératif de commencer avec cette méthode qui va empêcher le navigateur d'envoyer le formulaire lui-même !
             e.preventDefault();
-
             let form = $(e.target);
             let name = '<strong>' + $('#animName').val() + '<strong>' + ' modifié avec succès !';
             let remove = '<strong>' + $('#animName').val() + '<strong>' + ' supprimé avec succès !';
-
+            let episode = '<strong>' + 'Episode' + '<strong>' + ' uploadé avec succès !';
             $form = $(e.target);
             let modal = $('#del');
-
             let $submitButton = $form.find(':submit');
             $submitButton.html('<i class="fas fa-spinner fa-pulse"></i>');
             $submitButton.prop('disabled', true);
-
 // !!!!!!!!!!!!!!!!!   ajaxSubmit du plugin ajaxForm nécessaire pour l'upload de donnée dans la db   !!!!!!!!!!!!!!!!
             form.ajaxSubmit({
                 type: 'post',
                 success: function(data) {
                     if (data === 'success') {
-
 //   !!!!!!!!!!!!!!!!!!!   Changement de l'opacity du flash avec deux effet en setTimeout   !!!!!!!!!!!!!!!!!!!!!!!
-
                         (document.querySelector('#name')).innerHTML = name;
                         window.setTimeout(function () {
                             $('#goodFlash').toggleClass('badFlash').toggleClass('goodFlash').removeClass('alert-warning').addClass('alert-success');
@@ -178,15 +191,29 @@
                                 }, 3000);
                             }, 500);
                         });
+                    } else if (data === 'add_episode') {
+//   !!!!!!!!!!!!!!!!!!!   Changement de l'opacity du flash avec deux effet en setTimeout   !!!!!!!!!!!!!!!!!!!!!!!
+                        (document.querySelector('#name')).innerHTML = episode;
+                        window.setTimeout(function () {
+                            $('#goodFlash').toggleClass('badFlash').toggleClass('goodFlash').removeClass('alert-warning').addClass('alert-success');
+                            window.setTimeout(function () {
+                                $('#goodFlash').toggleClass('goodFlash').toggleClass('goodFlash2');
+                                window.setTimeout(function () {
+                                    $('#goodFlash').toggleClass('goodFlash2').toggleClass('badFlash2');
+                                    $submitButton.html('Ajouter un épisode');
+                                    $submitButton.prop('disabled', false);
+                                    window.setTimeout(function () {
+                                        $('#goodFlash').toggleClass('badFlash2').toggleClass('badFlash');
+                                    }, 500);
+                                }, 3000);
+                            }, 500);
+                        });
                     } else {
-
                         modal.modal('hide');
                         (document.querySelector('#name')).innerHTML = remove;
-
                         let buttonDel = $('#buttonDel');
                         buttonDel.html('<i class="fas fa-spinner fa-pulse"></i>');
                         buttonDel.prop('disabled', true);
-
                         window.setTimeout(function () {
                             $('#goodFlash').toggleClass('badFlash').toggleClass('goodFlash').removeClass('alert-success').addClass('alert-danger');
                             window.setTimeout(function () {
@@ -204,16 +231,17 @@
                     }
                 }
             });
-
         });
     </script>
     <script>
-        //   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   Redirection vers la liste d'animé quand on modif   !!!!!!!!!!!!!!!!!!!
 
-        $(document).submit(function () {
-            $('#update').onclick = setTimeout(function () {
-                window.location.href = '{{ path('animes') }}'
-            }, 4500)
-        })
+        //////////////////////////////////////////////////////
+        // Placement du nom de l'image uploadé dans l'input //
+        //////////////////////////////////////////////////////
+
+        $('.custom-file-input').on('change',function(){
+            var fileName = $(this).val().replace(/\\/g, '/').replace(/.*\//, '');
+            $(this).parent('.custom-file').find('.custom-file-label').text(fileName);
+        });
     </script>
 {% endblock %}

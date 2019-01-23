@@ -4,7 +4,6 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -53,7 +52,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\File(
-     *     mimeTypes = {"image/jpeg", "	image/png"},
+     *     mimeTypes = {"image/jpeg", "	image/png", "mage/jpg"},
      *     mimeTypesMessage = "Seul les images sont acceptées"
      * )
      */

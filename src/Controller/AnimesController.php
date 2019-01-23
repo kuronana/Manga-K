@@ -9,6 +9,11 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
+/**
+ * @Route("/animes")
+ * Class AnimesController
+ * @package App\Controller
+ */
 class AnimesController extends AbstractController
 {
     private $utils;
@@ -27,13 +32,27 @@ class AnimesController extends AbstractController
     }
 
     /**
-     * @Route("/animes", name="animes")
+     * @Route("/", name="animes")
      */
     public function index()
     {
         $animes = $this->animesRepository->findAll();
 
         return $this->render('animes/index.html.twig', [
+            'last_username' => $this->utils->getLastUsername(),
+            'error' => $this->utils->getLastAuthenticationError(),
+            'animes' => $animes
+        ]);
+    }
+
+    /**
+     * @Route("/stream/{name}", name="stream")
+     * @return \Symfony\Component\HttpFoundation\Response|\Symfony\Component\HttpFoundation\StreamedResponse
+     */
+    public function streaming($name)
+    {
+        $animes = $this->animesRepository->findAll();
+        return $this->render('animes/stream.html.twig', [
             'last_username' => $this->utils->getLastUsername(),
             'error' => $this->utils->getLastAuthenticationError(),
             'animes' => $animes

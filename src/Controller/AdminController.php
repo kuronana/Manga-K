@@ -3,11 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\Animes;
+use App\Entity\Episodes;
 use App\Entity\Type;
 use App\Form\AccountSettingAvatarType;
 use App\Form\AccountSettingPasswordType;
 use App\Form\AnimeType;
+use App\Form\EpisodesType;
 use App\Repository\AnimesRepository;
+use App\Repository\EpisodesRepository;
 use App\Repository\UserRepository;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -30,16 +33,19 @@ class AdminController extends AbstractController
     private $om;
     private $animesRepository;
     private $userRepository;
+    private $episodeRepository;
     private $filesystem;
 
     public function __construct(ObjectManager $manager,
                                 AnimesRepository $animesRepository,
                                 UserRepository $userRepository,
+                                EpisodesRepository $episodeRepository,
                                 Filesystem $filesystem)
     {
         $this->om = $manager;
         $this->animesRepository = $animesRepository;
         $this->userRepository = $userRepository;
+        $this->episodeRepository = $episodeRepository;
         $this->filesystem = $filesystem;
     }
 
@@ -322,12 +328,52 @@ class AdminController extends AbstractController
 
             return new Response('success');
         }
+        //////////////////////////////
+        //  Rajouter des épisodes  ///
+        //////////////////////////////
+
+        $episode = new Episodes();
+
+        $formEpisode = $this->createForm(EpisodesType::class, $episode);
+        $formEpisode->handleRequest($request);
+
+        if ($formEpisode->isSubmitted() && $formEpisode->isValid()) {
+            $video = $formEpisode->get('episodes')->getData();
+
+            $scanEpisodes = scandir('assets/video/upload/anime/' . $anime->getName() . '/Saison ' . $episode->getSeason());
+            $episodes = [];
+
+            foreach ($scanEpisodes as $eps) {
+                if (!in_array( $eps, ['.', '..'] )) {
+                    $episodes[] = $eps;
+                }
+            }
+
+            $count = count($episodes) + 1;
+            $fileName = 'Episode ' . $count . '.mp4';
+
+
+            try {
+                $video->move(
+                    $this->getParameter('anime_directory'). "/" . $anime->getName() . "/Saison " . $episode->getSeason(),
+                    $fileName);
+            } catch (FileException $e) {
+            }
+
+            $episode->setAnime($anime);
+            $episode->setEpisodes($fileName);
+            $this->om->persist($episode);
+            $this->om->flush();
+
+            return new Response('add_episode');
+        }
 
         return $this->render('security/admin/updateAnime.html.twig', [
             'formUpdateAnime' => $formUpdateAnime->createView(),
+            'formEpisode' => $formEpisode->createView(),
             'anime' => $anime,
             'tab' => $tab,
-            'emptySeasons' => $emptySeasons
+            'emptySeasons' => $emptySeasons,
         ]);
     }
 
@@ -347,7 +393,7 @@ class AdminController extends AbstractController
         $this->om->flush();
 
 
-        return $this->redirectToRoute("animes");
+        return new Response('delete');
     }
 
     /**
@@ -381,7 +427,7 @@ class AdminController extends AbstractController
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function RemSeason($id)
+    public function remSeason($id)
     {
         $filesystem = new Filesystem();
         $anime = $this->animesRepository->findOneBy([
