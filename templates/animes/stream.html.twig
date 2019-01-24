@@ -7,23 +7,58 @@
     {% if error %}
         <div class="alert alert-danger mt-3 text-center">{{ error.messageKey | trans(error.messageData, 'security') }}</div>
     {% endif %}
+    <img src="/assets/images/anime/fiche/{{ anime.imageCardBlur }}" class="img-fluid" alt="absolut_duo_flou" id="flou_fiche_image">
 
     <div class="container-fluid">
-        <h1 class="text-center mt-3 mb-3">Liste des animés</h1>
-        <div class="row">
-            <div class="col-12 col-md-9">
+        <div class="row mt-5">
+            <div class="col-12 col-md-7 offset-1 fiche">
                 <div class="row">
-                    <img src="/assets/images/anime/fiche/absolut_duo.jpg" class="img-fluid" alt="absolut_duo">
+                    <img src="/assets/images/anime/fiche/{{ anime.imageCard }}" class="img-fluid" width="50000px" alt="absolut_duo">
+                </div>
+                <div class="row">
+                    <div class="col-5 col-md-3 text-center pl-0">
+                        {% for key, episodes in tab %}
+                            <ul class="bg-light my-1 p-0">
+                                <li class="text-dark">{{ key }}</li>
+                            </ul>
+                            <ul class="bg-secondary pl-1">
+                                {% for episode in episodes %}
+                                    <li><a href="{{ path('stream', {'name' : anime.name, 'EnCourSeason' : key | replace({'Saison ' : ''}), 'EnCourEpisode' : episode }) }}" class="text-light">{{ episode | replace ({'.mp4': ''}) }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        {% endfor %}
+                    </div>
+                    <div class="col-12 col-md-9 py-1 pr-1 pl-0">
+                        <video width="100%" controls>>
+                            <source src="/assets/video/upload/anime/{{ anime.name }}/Saison {{ EnCourSeason }}/{{ EnCourEpisode }}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        <hr>
+                        <div class="row">
+                            <button type="button" class="btn btn-warning h  col-5" style="border-radius: 15px;" onclick="location.href = '{{ path('animes') }}'"><h4 class="p-0 m-0">Retour</h4></button>
+                            <h4 class="text-center pt-2 mb-0 col-5 offset-1 bg-secondary h" style="border-radius: 15px; border: none">Commentaires</h4>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="col-12 col-md-3">
-                <div class="card border-success mb-3" style="max-width: 18rem;">
-                    <div class="card-header bg-transparent border-success">Header</div>
-                    <div class="card-body text-success">
-                        <h5 class="card-title">Success card title</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    </div>
-                    <div class="card-footer bg-transparent border-success">Footer</div>
+            <div class="col-12 col-md-3 offset-1 ml-2 fiche p-0">
+                <h4 class="text-center pb-2 mb-0 bg-secondary Synopsis">Synopsis</h4>
+                <div class="card-header mt-0 p-0 bg-transparent">
+                    <h1 class="text-center">{{ anime.name }}</h1>
+                </div>
+                <div class="card-body text-primary">
+                    <p class="card-text text-justify">{{ anime.synopsis }}</p>
+                </div>
+                <div class="card-footer bg-transparent"></div>
+                <h4 class="text-center pb-2 bg-secondary Synopsis">Genre</h4>
+                <div>
+                    <ul>
+                        {% for type in anime.type %}
+                            <li>
+                                <span class="badge badge-pill badge-primary">{{ type.name }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
                 </div>
             </div>
         </div>

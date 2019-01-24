@@ -50,6 +50,16 @@ class Animes
      */
     private $episodes;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $imageCard;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $imageCardBlur;
+
     public function __construct()
     {
         $this->typeLinks = new ArrayCollection();
@@ -163,6 +173,30 @@ class Animes
                 $episode->setAnime(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getImageCard(): ?string
+    {
+        return $this->imageCard;
+    }
+
+    public function setImageCard(?string $imageCard): self
+    {
+        $this->imageCard = $imageCard;
+
+        return $this;
+    }
+
+    public function getImageCardBlur(): ?string
+    {
+        return $this->imageCardBlur;
+    }
+
+    public function setImageCardBlur(?string $imageCardBlur): self
+    {
+        $this->imageCardBlur = $imageCardBlur;
 
         return $this;
     }

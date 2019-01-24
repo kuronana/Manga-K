@@ -3,6 +3,33 @@ body {
     opacity: 0;
     transition: 0.5s ease;
 }
+
+ul {
+    list-style: none;
+}
+
+/*
+ !!!!!!!!!!!! Fiche animé   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ */
+.fiche {
+    box-shadow: 0 0 15px 1px #2a3f52;
+    background-color: #2a3f52;
+}
+
+#flou_fiche_image {
+    position:absolute;
+    top:0;
+    left:0;
+    width: 100%;
+    -webkit-mask-image:-webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,1)), to(rgba(0,0,0,0)));
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0));
+}
+
+.Synopsis {
+    border: 1rem solid #2a3f52;
+    border-radius: 30px;
+}
+
 /*
  !!!!!!!!!!!!!  boutton input upload image   !!!!!!!!!!!!!!!
  */

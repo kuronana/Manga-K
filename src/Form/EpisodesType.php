@@ -14,7 +14,9 @@ class EpisodesType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('season', IntegerType::class)
+            ->add('season', IntegerType::class, [
+                'label' => 'Entrez une saison'
+            ])
             ->add('episodes', FileType::class, [
                 'mapped' => false,
                 'label' => 'Choisissez un épisode'

@@ -23,6 +23,12 @@ class AnimeType extends AbstractType
             ->add('image', TextType::class, [
                 'label' => false
             ])
+            ->add('imageCard', TextType::class, [
+                'label' => false
+            ])
+            ->add('imageCardBlur', TextType::class, [
+                'label' => false
+            ])
             ->add('synopsis', TextareaType::class, [
                 'label' => false,
                 'attr' => [
