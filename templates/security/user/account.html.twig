@@ -1,7 +1,243 @@
-{% extends '/security/base_connect.html.twig' %}
+{% extends 'base.html.twig' %}
 
-{% block title %}Manga-K Compte{% endblock %}
+{% block title %}Manka-K Compte{% endblock %}
 
 {% block body %}
 
+    <div class="container-fluid mt-5">
+        <div class="row">
+            <div class="alert alert-dismissible alert-success badFlash col-8 offset-2 mb-3" id="goodFlash" align="center">
+                <strong id="name">p</strong>
+            </div>
+        </div>
+        <div class="row mb-5">
+            <div class="col-3 offset-1">
+                <div class="card p-0">
+                    <h2 class="card-header bg-primary text-center">Mon compte</h2>
+                    <div class="card-body" align="center">
+                        <h5 class="card-title">{{ user.username }}</h5>
+                        <h6 class="card-subtitle text-muted pb-3">Utilisateur}</h6>
+                        <img class="card-img-top" src="/assets/images/upload/{{ user.picture }}" style="width: 10rem" alt="Card image cap">
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><strong class="text-primary">E-mail : </strong> {{ user.mail }}</li>
+                    </ul>
+                    <div class="card-footer text-muted">
+                        I am a panda !
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 offset-1">
+                <div class="jumbotron pt-4">
+                    <h3 class="text-center">Paramètre de compte</h3>
+                    <hr class="my-4">
+                    <div class="accordion" id="accordionExample">
+                        <div class="card">
+                            <div class="card-header text-center bg-primary" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne" id="headingOne">
+                                <h5 class="mb-0">
+                                    Editer votre profil
+                                </h5>
+                            </div>
+                            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+                                <div class="card-body" align="center">
+                                    <div class="col-5">
+                                        {{ form_start(formAvatar) }}
+                                        {{ form_row(formAvatar.file) }}
+                                        <button type="submit" class="btn btn-primary h">Changer d'avatar</button>
+                                        {{ form_end(formAvatar) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header text-center bg-primary" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" id="headingTwo">
+                                <h5 class="mb-0">
+                                    Editer votre mot de passe
+                                </h5>
+                            </div>
+                            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                                <div class="card-body" align="center">
+                                    {{ form_start(formPassword) }}
+                                    <div class="row justify-content-center text-primary">
+                                        <div class="col-6">
+                                            {{ form_row(formPassword.old_password) }}
+                                            {{ form_row(formPassword.password) }}
+                                            {{ form_row(formPassword.confirm_password) }}
+                                            <button type="submit" class="btn btn-primary h">Changer le mot de passe</button>
+                                        </div>
+                                    </div>
+                                    {{ form_end(formPassword) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header text-center bg-primary" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree" id="headingThree">
+                                <h5 class="mb-0">
+                                    Mon compte
+                                </h5>
+                            </div>
+                            <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                                <div class="card-body">
+                                    <div class="row justify-content-center">
+                                        <button type="button" class="btn btn-outline-danger btn-lg h col-4" id="buttonDel" data-target="#delAccount" data-toggle="modal">Supprimer mon compte</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class=" row mb-4">
+                    <button type="button" class="btn btn-primary btn-lg h col-4 offset-4" onclick="location.href = '{{ path('security_home') }}'">Retour</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!   Modal de suppression de compte   !!!!!!!!!!!!!!!!!!!!!!!!! -->
+
+        <div class="modal fade" id="delAccount" tabindex="-1" role="dialog" aria-labelledby="del" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="text-primary">Supprimer son compte</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Êtes vous certain de vouloir supprimer votre compte ?</p>
+                        <p>Il sera définitivement éffacé !</p>
+                    </div>
+                    <div class="modal-footer">
+                        <form action="{{ path('user_delete', { 'id' : user.id}) }}">
+                            <button type="submit" class="btn btn-primary" id="avatar">Confirmer</button>
+                        </form>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                    </div>
+                    <small class="text-primary text-center">Vous serez déconnecté suite à la suppression de votre compte.</small>
+                </div>
+            </div>
+        </div>
+{% endblock %}
+
+
+{% block javascripts %}
+    <script>
+        $(document).submit(function(e){
+// ! il est impératif de commencer avec cette méthode qui va empêcher le navigateur d'envoyer le formulaire lui-même !
+            e.preventDefault();
+            let del = 'Votre compte à été supprimé !';
+            let new_password = 'Mot de passe modifié avec succès !';
+            let new_avatar = 'Avatar modifié avec succès !';
+
+            $form = $(e.target);
+            let modalD = $('#delAccount');
+
+            let $submitButton = $form.find(':submit');
+            $submitButton.html('<i class="fas fa-spinner fa-pulse"></i>');
+            $submitButton.prop('disabled', true);
+
+// !!!!!!!!!!!!!!!!!   ajaxSubmit du plugin ajaxForm nécessaire pour l'upload de donnée dans la db   !!!!!!!!!!!!!!!!
+            $form.ajaxSubmit({
+                type: 'post',
+                success: function(data) {
+
+                    modalD.modal('hide');
+
+                    if(data === 'success') {
+                        (document.querySelector('#name')).innerHTML = del;
+
+                        let buttonSwitch = $('#buttonDel');
+                        buttonSwitch.html('<i class="fas fa-spinner fa-pulse"></i>');
+                        buttonSwitch.prop('disabled', true);
+
+                        window.setTimeout(function () {
+                            $('#goodFlash').toggleClass('badFlash').toggleClass('goodFlash').removeClass('alert-danger').addClass('alert-success');
+                            window.setTimeout(function () {
+                                $('#goodFlash').toggleClass('goodFlash').toggleClass('goodFlash2');
+                                window.setTimeout(function () {
+                                    $('#goodFlash').toggleClass('goodFlash2').toggleClass('badFlash2');
+                                    $submitButton.html('Stupid Boy');
+                                    buttonSwitch.html('Stupid Boy');
+                                    window.setTimeout(function () {
+                                        $('#goodFlash').toggleClass('badFlash2').toggleClass('badFlash');
+//   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   Redirection vers la liste d'user quand on switchRole   !!!!!!!!!!!!!!!!!!!
+                                        window.setTimeout(function () {
+                                            window.location.href = '{{ path('security_logout') }}'
+                                        }, 500);
+                                    }, 500);
+                                }, 3000);
+                            }, 500);
+                        });
+
+                    }
+
+                    if(data === 'new_password') {
+                        (document.querySelector('#name')).innerHTML = new_password;
+
+                        let buttonSwitch = $('#buttonSwitch');
+                        buttonSwitch.html('<i class="fas fa-spinner fa-pulse"></i>');
+                        buttonSwitch.prop('disabled', true);
+
+                        window.setTimeout(function () {
+                            $('#goodFlash').toggleClass('badFlash').toggleClass('goodFlash').removeClass('alert-danger').addClass('alert-success');
+                            window.setTimeout(function () {
+                                $('#goodFlash').toggleClass('goodFlash').toggleClass('goodFlash2');
+                                window.setTimeout(function () {
+                                    $('#goodFlash').toggleClass('goodFlash2').toggleClass('badFlash2');
+                                    $submitButton.html('Ok Boy');
+                                    buttonSwitch.html('Ok Boy');
+                                    window.setTimeout(function () {
+                                        $('#goodFlash').toggleClass('badFlash2').toggleClass('badFlash');
+                                    }, 500);
+                                }, 3000);
+                            }, 500);
+                        });
+
+                    }
+
+                    if(data === 'change_avatar') {
+                        (document.querySelector('#name')).innerHTML = new_avatar;
+
+                        let buttonSwitch = $('#buttonSwitch');
+                        buttonSwitch.html('<i class="fas fa-spinner fa-pulse"></i>');
+                        buttonSwitch.prop('disabled', true);
+
+                        window.setTimeout(function () {
+                            $('#goodFlash').toggleClass('badFlash').toggleClass('goodFlash').removeClass('alert-danger').addClass('alert-success');
+                            window.setTimeout(function () {
+                                $('#goodFlash').toggleClass('goodFlash').toggleClass('goodFlash2');
+                                window.setTimeout(function () {
+                                    $('#goodFlash').toggleClass('goodFlash2').toggleClass('badFlash2');
+                                    $submitButton.html('Easy Boy');
+                                    buttonSwitch.html('Easy Boy');
+                                    window.setTimeout(function () {
+                                        $('#goodFlash').toggleClass('badFlash2').toggleClass('badFlash');
+//   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   Redirection vers la liste d'user quand on switchRole   !!!!!!!!!!!!!!!!!!!
+                                        window.setTimeout(function () {
+                                            window.location.href = '{{ path('user_account') }}'
+                                        }, 500);
+                                    }, 500);
+                                }, 3000);
+                            }, 500);
+                        });
+                    }
+                }
+            });
+
+        });
+    </script>
+    <script>
+
+        //////////////////////////////////////////////////////
+        // Placement du nom de l'image uploadé dans l'input //
+        //////////////////////////////////////////////////////
+
+        $('.custom-file-input').on('change',function(){
+            var fileName = $(this).val().replace(/\\/g, '/').replace(/.*\//, '');
+            $(this).parent('.custom-file').find('.custom-file-label').text(fileName);
+        });
+    </script>
 {% endblock %}

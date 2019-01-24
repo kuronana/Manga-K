@@ -20,13 +20,23 @@
                                 <h4 class="card-title">Nom</h4>
                                 {{ form_row(formAnime.name, { 'id': 'animName', 'attr': {'style': 'border-radius: 5px'}}) }}
                             </div>
-                            <div class="col-5">
-                                <h4 class="card-title">Lien vers l'image</h4>
-                                {{ form_row(formAnime.image, { 'attr': {'class': 'col-12', 'style': 'border-radius: 5px'}}) }}
-                            </div>
                             <div class="col-2">
                                 <h4 class="card-title">Durée</h4>
                                 {{ form_row(formAnime.duration, { 'attr': {'class': 'col-8', 'style': 'border-radius: 5px'}}) }}
+                            </div>
+                            <div class="col-5">
+                                <h4 class="card-title">Nom de la miniature</h4>
+                                {{ form_row(formAnime.image, { 'attr': {'class': 'col-12', 'style': 'border-radius: 5px'}}) }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <h4 class="card-title">Nom de l'image de la fiche</h4>
+                                {{ form_row(formAnime.imageCard, { 'attr': {'class': 'col-12', 'style': 'border-radius: 5px'}}) }}
+                            </div>
+                            <div class="col-6">
+                                <h4 class="card-title">Nom de l'image du background</h4>
+                                {{ form_row(formAnime.imageCardBlur, { 'attr': {'class': 'col-12', 'style': 'border-radius: 5px'}}) }}
                             </div>
                         </div>
                         <h4 class="card-title">Synopsis</h4>

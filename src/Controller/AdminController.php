@@ -265,6 +265,7 @@ class AdminController extends AbstractController
 
             return new Response('success');
         }
+
         return $this->render('security/admin/newAnime.html.twig', [
             'formAnime' => $formAnime->createView(),
             'genres' => $genres
