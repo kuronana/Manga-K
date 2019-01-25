@@ -5,176 +5,172 @@
 {% block body %}
 
     {% if user %}
-    <div class="container mt-5">
-        <div class="row">
-            <div class="alert alert-dismissible alert-success badFlash col-8 offset-2 mb-5" id="goodFlash" align="center">
-                <strong id="name">p</strong>
+        <div class="container mt-5">
+            <div class="row">
+                <div class="alert alert-dismissible alert-success badFlash col-8 offset-2 mb-5" id="goodFlash" align="center">
+                    <strong id="name">p</strong>
+                </div>
             </div>
-        </div>
-        <div class="row mb-5">
-            <div class="col-10 offset-1" align="center">
-                <div class="card text-white bg-secondary mb-3 account">
-                    <h2 class="card-header bg-primary accountHead" style="color: white">Compte de {{ user.username }}</h2>
-                    <div class="card-body"  style="color: white">
-                        <div class="row justify-content-center">
-                            <div class="col-5">
-                                <div class="jumbotron">
-                                    <h4 class="card-title">Pseudo</h4>
-                                    <div>{{ user.username }}</div>
-                                </div>
-                            </div>
-                            <div class="col-5">
-                                <div class="jumbotron">
-                                    <h4 class="card-title">E-Mail</h4>
-                                    <div>{{ user.mail }}</div>
-                                </div>
-                            </div>
+            <div class="row mb-5">
+                <div class="col-8 offset-2">
+                    <div class="card p-0">
+                        <h2 class="card-header bg-primary text-center">Compte de {{ user.username }}</h2>
+                        <div class="card-body" align="center">
+                            <h5 class="card-title">{{ user.username }}</h5>
+                            <h6 class="card-subtitle text-muted pb-3">Utilisateur</h6>
+                            <img class="card-img-top" src="/assets/images/upload/{{ user.picture }}" style="width: 10rem" alt="Card image cap">
                         </div>
-                        <div class="mt-3">
+                        <div class="card-body">
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><strong class="text-primary">E-mail : </strong> {{ user.mail }}</li>
+                        </ul>
+                        <div class="card-footer text-muted"align="center">
                             <button type="button" class="btn btn-primary h col-3" onclick="location.href = '{{ path('user_list') }}'">Retour</button>
-                            <button type="button" class="btn btn-danger h col-3 offset-1" id="buttonDel" data-target="#del" data-toggle="modal">Supprimer</button>
-                            <button type="button" class="btn btn-outline-primary h col-3 offset-1" id="buttonSwitch" data-target="#switch" data-toggle="modal">Passer en administrateur</button>
+                            <button type="button" class="btn btn-danger h col-3" id="buttonDel" data-target="#del" data-toggle="modal">Supprimer</button>
+                            <button type="button" class="btn btn-outline-primary h col-3" id="buttonSwitch" data-target="#switch" data-toggle="modal">Switch admin</button>
                         </div>
                         <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!   Modal de suppression !!!!!!!!!!!!!!!!!!!!!!!!! -->
 
-                            <div class="modal fade" id="del" tabindex="-1" role="dialog" aria-labelledby="del" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="">Suppression du compte de {{ user.username }}</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <p>Êtes vous certain de vouloir supprimer cet utilisateur ?</p>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <form action="{{ path('user_delete', { 'id' : user.id}) }}">
-                                                <button type="submit" class="btn btn-danger" id="deleteUser">Confirmer</button>
-                                            </form>
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-                                        </div>
+                        <div class="modal fade" id="del" tabindex="-1" role="dialog" aria-labelledby="del" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="">Suppression du compte de {{ user.username }}</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Êtes vous certain de vouloir supprimer cet utilisateur ?</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <form action="{{ path('user_delete', { 'id' : user.id}) }}">
+                                            <button type="submit" class="btn btn-danger" id="deleteUser">Confirmer</button>
+                                        </form>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
                                     </div>
                                 </div>
                             </div>
-                            <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!   Modal de switch role   !!!!!!!!!!!!!!!!!!!!!!!!! -->
+                        </div>
+                        <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!   Modal de switch role   !!!!!!!!!!!!!!!!!!!!!!!!! -->
 
-                            <div class="modal fade" id="switch" tabindex="-1" role="dialog" aria-labelledby="del" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="">Promotion de {{ user.username }} au rang d'administrateur</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <p>Êtes vous certain de vouloir basculer cet utilisateur en administrateur ?</p>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <form action="{{ path('switch_role', { 'id' : user.id}) }}">
-                                                <button type="submit" class="btn btn-primary" id="switchUser">Confirmer</button>
-                                            </form>
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-                                        </div>
+                        <div class="modal fade" id="switch" tabindex="-1" role="dialog" aria-labelledby="del" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="">Promotion de {{ user.username }} au rang d'administrateur</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Êtes vous certain de vouloir basculer cet utilisateur en administrateur ?</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <form action="{{ path('switch_role', { 'id' : user.id}) }}">
+                                            <button type="submit" class="btn btn-primary" id="switchUser">Confirmer</button>
+                                        </form>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
                                     </div>
                                 </div>
                             </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+        </div>
 
-{% endif %}
+    {% endif %}
 {% endblock %}
 
 
 {% block javascripts %}
     {% if user %}
-    <script>
-        $(document).submit(function(e){
+        <script>
+            $(document).submit(function(e){
 // ! il est impératif de commencer avec cette méthode qui va empêcher le navigateur d'envoyer le formulaire lui-même !
-            e.preventDefault();
-            console.log('submit');
-            let remove = 'L\'utilisateur ' + '<strong>' + '{{ user.username }}' + '<strong>' + ' a été supprimé avec succès !';
-            let role = 'L\'utilisateur ' + '<strong>' + '{{ user.username }}' + '<strong>' + ' est maintenant administrateur !';
+                e.preventDefault();
+                console.log('submit');
+                let remove = 'L\'utilisateur ' + '<strong>' + '{{ user.username }}' + '<strong>' + ' a été supprimé avec succès !';
+                let role = 'L\'utilisateur ' + '<strong>' + '{{ user.username }}' + '<strong>' + ' est maintenant administrateur !';
 
-            $form = $(e.target);
-            let modal = $('#del');
-            let modalS = $('#switch');
+                $form = $(e.target);
+                let modal = $('#del');
+                let modalS = $('#switch');
 
-            let $submitButton = $form.find(':submit');
-            $submitButton.html('<i class="fas fa-spinner fa-pulse"></i>');
-            $submitButton.prop('disabled', true);
+                let $submitButton = $form.find(':submit');
+                $submitButton.html('<i class="fas fa-spinner fa-pulse"></i>');
+                $submitButton.prop('disabled', true);
 
 // !!!!!!!!!!!!!!!!!   ajaxSubmit du plugin ajaxForm nécessaire pour l'upload de donnée dans la db   !!!!!!!!!!!!!!!!
-            $form.ajaxSubmit({
-                type: 'post',
-                success: function(data) {
-                    if (data === 'success') {
+                $form.ajaxSubmit({
+                    type: 'post',
+                    success: function(data) {
+                        if (data === 'success') {
 
-                        modal.modal('hide');
-                        (document.querySelector('#name')).innerHTML = remove;
+                            modal.modal('hide');
+                            (document.querySelector('#name')).innerHTML = remove;
 
-                        let buttonDel = $('#buttonDel');
-                        buttonDel.html('<i class="fas fa-spinner fa-pulse"></i>');
-                        buttonDel.prop('disabled', true);
+                            let buttonDel = $('#buttonDel');
+                            buttonDel.html('<i class="fas fa-spinner fa-pulse"></i>');
+                            buttonDel.prop('disabled', true);
 
-                        window.setTimeout(function () {
-                            $('#goodFlash').toggleClass('badFlash').toggleClass('goodFlash').removeClass('alert-success').addClass('alert-danger');
                             window.setTimeout(function () {
-                                $('#goodFlash').toggleClass('goodFlash').toggleClass('goodFlash2');
+                                $('#goodFlash').toggleClass('badFlash').toggleClass('goodFlash').removeClass('alert-success').addClass('alert-danger');
                                 window.setTimeout(function () {
-                                    $('#goodFlash').toggleClass('goodFlash2').toggleClass('badFlash2');
-                                    $submitButton.html('Bye Boy');
-                                    buttonDel.html('Bye Boy');
+                                    $('#goodFlash').toggleClass('goodFlash').toggleClass('goodFlash2');
                                     window.setTimeout(function () {
-                                        $('#goodFlash').toggleClass('badFlash2').toggleClass('badFlash');
+                                        $('#goodFlash').toggleClass('goodFlash2').toggleClass('badFlash2');
+                                        $submitButton.html('Bye Boy');
+                                        buttonDel.html('Bye Boy');
+                                        window.setTimeout(function () {
+                                            $('#goodFlash').toggleClass('badFlash2').toggleClass('badFlash');
 //   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   Redirection vers la liste d'user quand on supprime   !!!!!!!!!!!!!!!!!!!
-                                        window.setTimeout(function () {
-                                            window.location.href = '{{ path('user_list') }}';
+                                            window.setTimeout(function () {
+                                                window.location.href = '{{ path('user_list') }}';
+                                            }, 500);
                                         }, 500);
-                                    }, 500);
-                                }, 3000);
-                            }, 500);
-                        })
-                    }
+                                    }, 3000);
+                                }, 500);
+                            })
+                        }
 
-                    if(data === 'switch') {
+                        if(data === 'switch') {
 
-                        modalS.modal('hide');
-                        (document.querySelector('#name')).innerHTML = role;
+                            modalS.modal('hide');
+                            (document.querySelector('#name')).innerHTML = role;
 
-                        let buttonSwitch = $('#buttonSwitch');
-                        buttonSwitch.html('<i class="fas fa-spinner fa-pulse"></i>');
-                        buttonSwitch.prop('disabled', true);
+                            let buttonSwitch = $('#buttonSwitch');
+                            buttonSwitch.html('<i class="fas fa-spinner fa-pulse"></i>');
+                            buttonSwitch.prop('disabled', true);
 
-                        window.setTimeout(function () {
-                            $('#goodFlash').toggleClass('badFlash').toggleClass('goodFlash').removeClass('alert-danger').addClass('alert-success');
                             window.setTimeout(function () {
-                                $('#goodFlash').toggleClass('goodFlash').toggleClass('goodFlash2');
+                                $('#goodFlash').toggleClass('badFlash').toggleClass('goodFlash').removeClass('alert-danger').addClass('alert-success');
                                 window.setTimeout(function () {
-                                    $('#goodFlash').toggleClass('goodFlash2').toggleClass('badFlash2');
-                                    $submitButton.html('Félicitation Boy');
-                                    buttonSwitch.html('Félicitation Boy');
+                                    $('#goodFlash').toggleClass('goodFlash').toggleClass('goodFlash2');
                                     window.setTimeout(function () {
-                                        $('#goodFlash').toggleClass('badFlash2').toggleClass('badFlash');
-//   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   Redirection vers la liste d'user quand on switchRole   !!!!!!!!!!!!!!!!!!!
+                                        $('#goodFlash').toggleClass('goodFlash2').toggleClass('badFlash2');
+                                        $submitButton.html('Félicitation Boy');
+                                        buttonSwitch.html('Félicitation Boy');
                                         window.setTimeout(function () {
-                                            window.location.href = '{{ path('user_list') }}'
+                                            $('#goodFlash').toggleClass('badFlash2').toggleClass('badFlash');
+//   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   Redirection vers la liste d'user quand on switchRole   !!!!!!!!!!!!!!!!!!!
+                                            window.setTimeout(function () {
+                                                window.location.href = '{{ path('user_list') }}'
+                                            }, 500);
                                         }, 500);
-                                    }, 500);
-                                }, 3000);
-                            }, 500);
-                        });
+                                    }, 3000);
+                                }, 500);
+                            });
 
+                        }
                     }
-                }
-            });
+                });
 
-        });
-    </script>
+            });
+        </script>
     {% endif %}
 {% endblock %}

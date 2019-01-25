@@ -96,7 +96,7 @@ class UserController extends AbstractController
             } catch (FileException $e) {
             }
 
-            $admin->setPicture($fileName);
+            $user->setPicture($fileName);
             $this->om->flush();
 
             return new Response('change_avatar');

@@ -55,7 +55,7 @@ class AnimesController extends AbstractController
      */
     public function streaming($name,
                               $EnCourSeason = 1,
-                              $EnCourEpisode = 'Episode 1.mp4')
+                              $EnCourEpisode = 'Episode 01.mp4')
     {
         $anime = $this->animesRepository->findOneByName($name);
 

@@ -356,7 +356,11 @@ class AdminController extends AbstractController
             }
 
             $count = count($episodes) + 1;
-            $fileName = 'Episode ' . $count . '.mp4';
+            if ($count < 10) {
+                $fileName = 'Episode 0' . $count . '.mp4';
+            } else {
+                $fileName = 'Episode ' . $count . '.mp4';
+            }
 
 
             try {
