@@ -60,11 +60,17 @@ class Animes
      */
     private $imageCardBlur;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="anime")
+     */
+    private $comments;
+
     public function __construct()
     {
         $this->typeLinks = new ArrayCollection();
         $this->type = new ArrayCollection();
         $this->episodes = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -197,6 +203,37 @@ class Animes
     public function setImageCardBlur(?string $imageCardBlur): self
     {
         $this->imageCardBlur = $imageCardBlur;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Comment[]
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setAnime($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): self
+    {
+        if ($this->comments->contains($comment)) {
+            $this->comments->removeElement($comment);
+            // set the owning side to null (unless already changed)
+            if ($comment->getAnime() === $this) {
+                $comment->setAnime(null);
+            }
+        }
 
         return $this;
     }
