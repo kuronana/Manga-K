@@ -16,6 +16,14 @@ ul {
     background-color: #2a3f52;
 }
 
+#FicheUser {
+    transition: 0.5s ease;
+}
+
+#FicheUser:hover {
+    color: #f65d00;
+}
+
 #flou_fiche_image {
     position:absolute;
     top:0;

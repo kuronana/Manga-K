@@ -34,10 +34,39 @@
                             Your browser does not support the video tag.
                         </video>
                         <hr>
-                        <div class="row">
+                        <div class="row ml-4 mb-5">
                             <button type="button" class="btn btn-warning h  col-5" style="border-radius: 15px;" onclick="location.href = '{{ path('animes') }}'"><h4 class="p-0 m-0">Retour</h4></button>
                             <h4 class="text-center pt-2 mb-0 col-5 offset-1 bg-secondary h" style="border-radius: 15px; border: none">Commentaires</h4>
                         </div>
+                        {% if currentComment %}
+                            {% for comment in currentComment %}
+                                <div class="row align-items-center bg-secondary">
+                                    <div class="col-3 pl-0"><img src="/assets/images/upload/{{ comment.user.picture }}" class="img-fluid" width="auto" alt="user_avatar"></div>
+                                    <div class="col-9" style="font-size: 15px">
+                                        <div class="row justify-content-start">
+                                            <div class="col-2">
+                                                <strong><a style="cursor:pointer" onclick="window.location.href = '{{ path('user_account') }}'" id="FicheUser">{{ comment.user.username }}</a></strong>
+                                            </div>
+                                            <div class="col-6 text-primary">
+                                                {{ comment.datetime | date('Y-m-d à H:i:s') }}
+                                            </div>
+                                        </div>
+                                        <div class="row pt-4">
+                                            <div class="col-12 m-0 commentaires">{{ comment.comment | raw }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+                            {% endfor %}
+                        {% endif %}
+                        {% if app.user %}
+                            <div class="my-2" id="newComment">
+                                {{ form_start(formComment) }}
+                                {{ form_row(formComment.comment) }}
+                                <button type="submit" class="btn btn-primary">Commenter</button>
+                                {{ form_end(formComment) }}
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -63,5 +92,32 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+
+    <script>
+        $("#newComment").submit(function(e){
+// ! il est impératif de commencer avec cette méthode qui va empêcher le navigateur d'envoyer le formulaire lui-même !
+            e.preventDefault();
+
+            let form = $(e.target);
+            let comment = 'Vous avez laissé un commentaire !';
+
+// !!!!!!!!!!!!!!!!!   ajaxSubmit du plugin ajaxForm nécessaire pour l'upload de donnée dans la db   !!!!!!!!!!!!!!!!
+            form.ajaxSubmit({
+                type: 'post',
+                success: function(data) {
+                    if (data === 'success') {
+                        window.location.href = '{{ path('stream', {'name' : anime.name, 'EnCourSeason' : EnCourSeason | replace({'Saison ' : ''}), 'EnCourEpisode' : EnCourEpisode }) }}';
+                    }
+                }
+            });
+        });
+    </script>
+    <script>
+        $('.commentaires p').css('margin-bottom', '0')
+    </script>
+
 {% endblock %}
 
